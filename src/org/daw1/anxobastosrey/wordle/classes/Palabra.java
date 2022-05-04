@@ -21,7 +21,7 @@ public class Palabra {
     private Character posCinco;
     
     public Palabra(String palabra){
-        palabra = palabra.toLowerCase();
+        palabra = palabra.toUpperCase();
         checkPalabra(palabra);
         this.palabra = palabra;
         this.posUno = palabra.charAt(0);
@@ -32,7 +32,7 @@ public class Palabra {
     }
     
     private static void checkPalabra(String s){
-        if(s == null || !s.matches("[a-z]{5}")) {
+        if(s == null || !s.matches("[A-Z]{5}")) {
             throw new IllegalArgumentException();
         }
     }

@@ -5,19 +5,73 @@
  */
 package org.daw1.anxobastosrey.wordle.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+
 /**
  *
  * @author AnxoN
  */
 public class MainGUIWordle extends javax.swing.JFrame {
+    
+    private static final java.awt.Color VERDE_LETRAS = new java.awt.Color(102,255,51);
+    private static final java.awt.Color AMARILLO_LETRAS = new java.awt.Color(255,204,51);
+    private static final java.awt.Color ROJO_LETRAS = new java.awt.Color(255,51,51);
+    
+    private static final int MAX_INTENTOS = 6;
+    private static final int TAMANHO_PALABRA = 5;
+    
+    private final javax.swing.JLabel[][] labels = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
 
     /**
      * Creates new form MainGUIWordle
      */
     public MainGUIWordle() {
         initComponents();
+        rellenarMatrizLabels();
+        test();
+    }
+    
+    public void test(){
+        for (int i = 0; i < labels.length; i++) {
+            JLabel[] label = labels[i];
+            for (int j = 0; j < label.length; j++) {
+                JLabel jLabel = label[j];
+                jLabel.setForeground(ROJO_LETRAS);
+                
+            }
+        }
+    }
+    
+    /*public void test(){
+        for (int i = 0; i < labels.length; i++) {
+            JLabel[] label = labels[i];
+            for (int j = 0; j < label.length; j++) {
+                JLabel jLabel = label[j];
+                jLabel.setForeground(ROJO_LETRAS);
+                
+            }
+        }
+    }
+    */
+    
+    public final void rellenarMatrizLabels(){
+        for (int i = 1; i <= MAX_INTENTOS; i++) {
+            for (int j = 1; j <= TAMANHO_PALABRA; j++) {
+                try {
+                    String nombreLabel = "jLabel" + i + "x" + j;
+                    javax.swing.JLabel aux = (javax.swing.JLabel) this.getClass().getDeclaredField(nombreLabel).get(this);
+                    labels[i-1][j-1] = aux;
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        }
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -60,9 +114,24 @@ public class MainGUIWordle extends javax.swing.JFrame {
         jLabel6x4 = new javax.swing.JLabel();
         jLabel6x5 = new javax.swing.JLabel();
         bottomJPanel = new javax.swing.JPanel();
+        leftBottomJPanel = new javax.swing.JPanel();
+        goodLettersJPanel = new javax.swing.JPanel();
+        goodLettersJLabel = new javax.swing.JLabel();
+        existsLettersJPanel = new javax.swing.JPanel();
+        existsLettersJLabel = new javax.swing.JLabel();
+        wrongLettersJPanel = new javax.swing.JPanel();
+        wrongLettersJLabel = new javax.swing.JLabel();
+        rightBottomJPanel = new javax.swing.JPanel();
+        inputJPanel = new javax.swing.JPanel();
+        wordTextField = new javax.swing.JTextField();
+        sendButton = new javax.swing.JButton();
+        messagesJPanel = new javax.swing.JPanel();
+        messagesJLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DAW1 Wordle AnxoBastosRey");
+        setMinimumSize(new java.awt.Dimension(500, 500));
+        setPreferredSize(new java.awt.Dimension(500, 500));
 
         mainJPanel.setLayout(new java.awt.BorderLayout());
 
@@ -251,14 +320,68 @@ public class MainGUIWordle extends javax.swing.JFrame {
         mainJPanel.add(letrasJPanel, java.awt.BorderLayout.CENTER);
 
         bottomJPanel.setPreferredSize(new java.awt.Dimension(200, 100));
-        bottomJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        bottomJPanel.setLayout(new java.awt.GridLayout(1, 2));
+
+        leftBottomJPanel.setLayout(new java.awt.GridLayout(3, 1));
+
+        goodLettersJPanel.setLayout(new java.awt.GridLayout());
+
+        goodLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        goodLettersJLabel.setForeground(new java.awt.Color(102, 255, 51));
+        goodLettersJLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        goodLettersJLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        goodLettersJLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        goodLettersJLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        goodLettersJPanel.add(goodLettersJLabel);
+
+        leftBottomJPanel.add(goodLettersJPanel);
+
+        existsLettersJPanel.setLayout(new java.awt.GridLayout());
+
+        existsLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        existsLettersJLabel.setForeground(new java.awt.Color(255, 204, 51));
+        existsLettersJPanel.add(existsLettersJLabel);
+
+        leftBottomJPanel.add(existsLettersJPanel);
+
+        wrongLettersJPanel.setLayout(new java.awt.GridLayout());
+
+        wrongLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        wrongLettersJLabel.setForeground(new java.awt.Color(255, 51, 51));
+        wrongLettersJPanel.add(wrongLettersJLabel);
+
+        leftBottomJPanel.add(wrongLettersJPanel);
+
+        bottomJPanel.add(leftBottomJPanel);
+
+        rightBottomJPanel.setLayout(new java.awt.GridLayout(2, 1));
+
+        wordTextField.setMinimumSize(new java.awt.Dimension(120, 22));
+        wordTextField.setPreferredSize(new java.awt.Dimension(120, 22));
+        inputJPanel.add(wordTextField);
+
+        sendButton.setText("Enviar");
+        inputJPanel.add(sendButton);
+
+        rightBottomJPanel.add(inputJPanel);
+
+        messagesJPanel.setLayout(new java.awt.GridLayout(1, 1));
+
+        messagesJLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        messagesJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        messagesJPanel.add(messagesJLabel);
+
+        rightBottomJPanel.add(messagesJPanel);
+
+        bottomJPanel.add(rightBottomJPanel);
+
         mainJPanel.add(bottomJPanel, java.awt.BorderLayout.PAGE_END);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,6 +428,11 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomJPanel;
+    private javax.swing.JLabel existsLettersJLabel;
+    private javax.swing.JPanel existsLettersJPanel;
+    private javax.swing.JLabel goodLettersJLabel;
+    private javax.swing.JPanel goodLettersJPanel;
+    private javax.swing.JPanel inputJPanel;
     private javax.swing.JLabel jLabel1x1;
     private javax.swing.JLabel jLabel1x2;
     private javax.swing.JLabel jLabel1x3;
@@ -335,7 +463,15 @@ public class MainGUIWordle extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6x3;
     private javax.swing.JLabel jLabel6x4;
     private javax.swing.JLabel jLabel6x5;
+    private javax.swing.JPanel leftBottomJPanel;
     private javax.swing.JPanel letrasJPanel;
     private javax.swing.JPanel mainJPanel;
+    private javax.swing.JLabel messagesJLabel;
+    private javax.swing.JPanel messagesJPanel;
+    private javax.swing.JPanel rightBottomJPanel;
+    private javax.swing.JButton sendButton;
+    private javax.swing.JTextField wordTextField;
+    private javax.swing.JLabel wrongLettersJLabel;
+    private javax.swing.JPanel wrongLettersJPanel;
     // End of variables declaration//GEN-END:variables
 }

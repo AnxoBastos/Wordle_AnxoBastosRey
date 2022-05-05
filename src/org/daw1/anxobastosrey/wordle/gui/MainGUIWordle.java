@@ -81,6 +81,8 @@ public class MainGUIWordle extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        temaButtonGroup = new javax.swing.ButtonGroup();
+        idiomaButtonGroup = new javax.swing.ButtonGroup();
         mainJPanel = new javax.swing.JPanel();
         letrasJPanel = new javax.swing.JPanel();
         jLabel1x1 = new javax.swing.JLabel();
@@ -127,11 +129,22 @@ public class MainGUIWordle extends javax.swing.JFrame {
         sendButton = new javax.swing.JButton();
         messagesJPanel = new javax.swing.JPanel();
         messagesJLabel = new javax.swing.JLabel();
+        mainJMenuBar = new javax.swing.JMenuBar();
+        juegoJMenu = new javax.swing.JMenu();
+        temaJMenu = new javax.swing.JMenu();
+        temaClaroJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        temaOscuroJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        idiomaJMenu = new javax.swing.JMenu();
+        castellanoJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        gallegoJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        inglesJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        francesJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        italianoJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        ajustesJMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DAW1 Wordle AnxoBastosRey");
         setMinimumSize(new java.awt.Dimension(500, 500));
-        setPreferredSize(new java.awt.Dimension(500, 500));
 
         mainJPanel.setLayout(new java.awt.BorderLayout());
 
@@ -324,7 +337,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         leftBottomJPanel.setLayout(new java.awt.GridLayout(3, 1));
 
-        goodLettersJPanel.setLayout(new java.awt.GridLayout());
+        goodLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         goodLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         goodLettersJLabel.setForeground(new java.awt.Color(102, 255, 51));
@@ -336,7 +349,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         leftBottomJPanel.add(goodLettersJPanel);
 
-        existsLettersJPanel.setLayout(new java.awt.GridLayout());
+        existsLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         existsLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         existsLettersJLabel.setForeground(new java.awt.Color(255, 204, 51));
@@ -344,7 +357,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         leftBottomJPanel.add(existsLettersJPanel);
 
-        wrongLettersJPanel.setLayout(new java.awt.GridLayout());
+        wrongLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         wrongLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         wrongLettersJLabel.setForeground(new java.awt.Color(255, 51, 51));
@@ -377,6 +390,52 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         mainJPanel.add(bottomJPanel, java.awt.BorderLayout.PAGE_END);
 
+        juegoJMenu.setText("Juego");
+        mainJMenuBar.add(juegoJMenu);
+
+        temaJMenu.setText("Tema");
+
+        temaButtonGroup.add(temaClaroJRadioButtonMenuItem);
+        temaClaroJRadioButtonMenuItem.setSelected(true);
+        temaClaroJRadioButtonMenuItem.setText("Claro");
+        temaJMenu.add(temaClaroJRadioButtonMenuItem);
+
+        temaButtonGroup.add(temaOscuroJRadioButtonMenuItem);
+        temaOscuroJRadioButtonMenuItem.setText("Oscuro");
+        temaJMenu.add(temaOscuroJRadioButtonMenuItem);
+
+        mainJMenuBar.add(temaJMenu);
+
+        idiomaJMenu.setText("Idioma");
+
+        idiomaButtonGroup.add(castellanoJRadioButtonMenuItem);
+        castellanoJRadioButtonMenuItem.setSelected(true);
+        castellanoJRadioButtonMenuItem.setText("Castellano");
+        idiomaJMenu.add(castellanoJRadioButtonMenuItem);
+
+        idiomaButtonGroup.add(gallegoJRadioButtonMenuItem);
+        gallegoJRadioButtonMenuItem.setText("Gallego");
+        idiomaJMenu.add(gallegoJRadioButtonMenuItem);
+
+        idiomaButtonGroup.add(inglesJRadioButtonMenuItem);
+        inglesJRadioButtonMenuItem.setText("Ingles");
+        idiomaJMenu.add(inglesJRadioButtonMenuItem);
+
+        idiomaButtonGroup.add(francesJRadioButtonMenuItem);
+        francesJRadioButtonMenuItem.setText("Frances");
+        idiomaJMenu.add(francesJRadioButtonMenuItem);
+
+        idiomaButtonGroup.add(italianoJRadioButtonMenuItem);
+        italianoJRadioButtonMenuItem.setText("Italiano");
+        idiomaJMenu.add(italianoJRadioButtonMenuItem);
+
+        mainJMenuBar.add(idiomaJMenu);
+
+        ajustesJMenu.setText("Ajustes");
+        mainJMenuBar.add(ajustesJMenu);
+
+        setJMenuBar(mainJMenuBar);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -385,7 +444,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
         );
 
         pack();
@@ -427,12 +486,20 @@ public class MainGUIWordle extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu ajustesJMenu;
     private javax.swing.JPanel bottomJPanel;
+    private javax.swing.JRadioButtonMenuItem castellanoJRadioButtonMenuItem;
     private javax.swing.JLabel existsLettersJLabel;
     private javax.swing.JPanel existsLettersJPanel;
+    private javax.swing.JRadioButtonMenuItem francesJRadioButtonMenuItem;
+    private javax.swing.JRadioButtonMenuItem gallegoJRadioButtonMenuItem;
     private javax.swing.JLabel goodLettersJLabel;
     private javax.swing.JPanel goodLettersJPanel;
+    private javax.swing.ButtonGroup idiomaButtonGroup;
+    private javax.swing.JMenu idiomaJMenu;
+    private javax.swing.JRadioButtonMenuItem inglesJRadioButtonMenuItem;
     private javax.swing.JPanel inputJPanel;
+    private javax.swing.JRadioButtonMenuItem italianoJRadioButtonMenuItem;
     private javax.swing.JLabel jLabel1x1;
     private javax.swing.JLabel jLabel1x2;
     private javax.swing.JLabel jLabel1x3;
@@ -463,13 +530,19 @@ public class MainGUIWordle extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6x3;
     private javax.swing.JLabel jLabel6x4;
     private javax.swing.JLabel jLabel6x5;
+    private javax.swing.JMenu juegoJMenu;
     private javax.swing.JPanel leftBottomJPanel;
     private javax.swing.JPanel letrasJPanel;
+    private javax.swing.JMenuBar mainJMenuBar;
     private javax.swing.JPanel mainJPanel;
     private javax.swing.JLabel messagesJLabel;
     private javax.swing.JPanel messagesJPanel;
     private javax.swing.JPanel rightBottomJPanel;
     private javax.swing.JButton sendButton;
+    private javax.swing.ButtonGroup temaButtonGroup;
+    private javax.swing.JRadioButtonMenuItem temaClaroJRadioButtonMenuItem;
+    private javax.swing.JMenu temaJMenu;
+    private javax.swing.JRadioButtonMenuItem temaOscuroJRadioButtonMenuItem;
     private javax.swing.JTextField wordTextField;
     private javax.swing.JLabel wrongLettersJLabel;
     private javax.swing.JPanel wrongLettersJPanel;

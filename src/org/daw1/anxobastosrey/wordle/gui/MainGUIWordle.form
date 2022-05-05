@@ -89,6 +89,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Ajustes"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ajustesJMenuActionPerformed"/>
+          </Events>
         </Menu>
       </SubComponents>
     </Menu>
@@ -560,6 +563,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Enviar"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendButtonActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

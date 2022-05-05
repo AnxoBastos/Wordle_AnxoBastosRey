@@ -7,6 +7,7 @@ package org.daw1.anxobastosrey.wordle.gui;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 /**
@@ -374,6 +375,11 @@ public class MainGUIWordle extends javax.swing.JFrame {
         inputJPanel.add(wordTextField);
 
         sendButton.setText("Enviar");
+        sendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendButtonActionPerformed(evt);
+            }
+        });
         inputJPanel.add(sendButton);
 
         rightBottomJPanel.add(inputJPanel);
@@ -432,6 +438,11 @@ public class MainGUIWordle extends javax.swing.JFrame {
         mainJMenuBar.add(idiomaJMenu);
 
         ajustesJMenu.setText("Ajustes");
+        ajustesJMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ajustesJMenuActionPerformed(evt);
+            }
+        });
         mainJMenuBar.add(ajustesJMenu);
 
         setJMenuBar(mainJMenuBar);
@@ -449,6 +460,16 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ajustesJMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustesJMenuActionPerformed
+        if (this.ajustesJMenu.isSelected()) {
+        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true);
+        ajustes.setVisible(true); 
+        }
+    }//GEN-LAST:event_ajustesJMenuActionPerformed
+
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+    }//GEN-LAST:event_sendButtonActionPerformed
 
     /**
      * @param args the command line arguments

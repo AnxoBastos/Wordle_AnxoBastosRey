@@ -77,6 +77,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         seleccionarMotorButtonGroup.add(jRadioButton2);
         jRadioButton2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButton2.setSelected(true);
         jRadioButton2.setText("Archivo");
         jPanel1.add(jRadioButton2);
 

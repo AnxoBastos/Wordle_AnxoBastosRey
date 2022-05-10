@@ -20,6 +20,14 @@ public class MainGUIWordle extends javax.swing.JFrame {
     private static final java.awt.Color AMARILLO_LETRAS = new java.awt.Color(255,204,51);
     private static final java.awt.Color ROJO_LETRAS = new java.awt.Color(255,51,51);
     
+    private static final java.awt.Color FONDO_LETRAS_OSCURO = new java.awt.Color(153,153,153);
+    private static final java.awt.Color FONDO_BOTTOM_OSCURO = new java.awt.Color(102,102,102);
+    private static final java.awt.Color FONDO_MENU_TEXTFIELD_OSCURO = new java.awt.Color(51,51,51);
+    
+    private static final java.awt.Color FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO = new java.awt.Color(0,0,0);
+    private static final java.awt.Color COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO = new java.awt.Color(255,255,255);
+    private static final java.awt.Color FONDO_BOTTOM_CLARO = new java.awt.Color(204,204,255);
+    
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
     
@@ -126,7 +134,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
         wrongLettersJLabel = new javax.swing.JLabel();
         rightBottomJPanel = new javax.swing.JPanel();
         inputJPanel = new javax.swing.JPanel();
-        wordTextField = new javax.swing.JTextField();
+        wordJTextField = new javax.swing.JTextField();
         sendButton = new javax.swing.JButton();
         messagesJPanel = new javax.swing.JPanel();
         messagesJLabel = new javax.swing.JLabel();
@@ -149,6 +157,9 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         mainJPanel.setLayout(new java.awt.BorderLayout());
 
+        letrasJPanel.setBackground(new java.awt.Color(255, 255, 255));
+        letrasJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 3));
+        letrasJPanel.setForeground(new java.awt.Color(204, 204, 255));
         letrasJPanel.setLayout(new java.awt.GridLayout(6, 5));
 
         jLabel1x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
@@ -333,11 +344,14 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         mainJPanel.add(letrasJPanel, java.awt.BorderLayout.CENTER);
 
+        bottomJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 3));
+        bottomJPanel.setForeground(new java.awt.Color(0, 0, 0));
         bottomJPanel.setPreferredSize(new java.awt.Dimension(200, 100));
         bottomJPanel.setLayout(new java.awt.GridLayout(1, 2));
 
         leftBottomJPanel.setLayout(new java.awt.GridLayout(3, 1));
 
+        goodLettersJPanel.setBackground(new java.awt.Color(204, 204, 255));
         goodLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         goodLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -350,6 +364,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         leftBottomJPanel.add(goodLettersJPanel);
 
+        existsLettersJPanel.setBackground(new java.awt.Color(204, 204, 255));
         existsLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         existsLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -358,6 +373,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         leftBottomJPanel.add(existsLettersJPanel);
 
+        wrongLettersJPanel.setBackground(new java.awt.Color(204, 204, 255));
         wrongLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         wrongLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -370,11 +386,19 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         rightBottomJPanel.setLayout(new java.awt.GridLayout(2, 1));
 
-        wordTextField.setMinimumSize(new java.awt.Dimension(120, 22));
-        wordTextField.setPreferredSize(new java.awt.Dimension(120, 22));
-        inputJPanel.add(wordTextField);
+        inputJPanel.setBackground(new java.awt.Color(204, 204, 255));
+        inputJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 15));
 
+        wordJTextField.setBackground(new java.awt.Color(255, 255, 255));
+        wordJTextField.setForeground(new java.awt.Color(0, 0, 0));
+        wordJTextField.setMinimumSize(new java.awt.Dimension(120, 22));
+        wordJTextField.setPreferredSize(new java.awt.Dimension(120, 22));
+        inputJPanel.add(wordJTextField);
+
+        sendButton.setBackground(new java.awt.Color(255, 255, 255));
+        sendButton.setForeground(new java.awt.Color(0, 0, 0));
         sendButton.setText("Enviar");
+        sendButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         sendButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sendButtonActionPerformed(evt);
@@ -384,10 +408,12 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         rightBottomJPanel.add(inputJPanel);
 
+        messagesJPanel.setBackground(new java.awt.Color(204, 204, 255));
         messagesJPanel.setLayout(new java.awt.GridLayout(1, 1));
 
-        messagesJLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        messagesJLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         messagesJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        messagesJLabel.setText("Inserte una palabra de 5 letras");
         messagesJPanel.add(messagesJLabel);
 
         rightBottomJPanel.add(messagesJPanel);
@@ -396,22 +422,37 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         mainJPanel.add(bottomJPanel, java.awt.BorderLayout.PAGE_END);
 
+        mainJMenuBar.setBackground(new java.awt.Color(51, 51, 51));
+
+        juegoJMenu.setBackground(new java.awt.Color(51, 51, 51));
         juegoJMenu.setText("Juego");
         mainJMenuBar.add(juegoJMenu);
 
+        temaJMenu.setBackground(new java.awt.Color(51, 51, 51));
         temaJMenu.setText("Tema");
 
         temaButtonGroup.add(temaClaroJRadioButtonMenuItem);
         temaClaroJRadioButtonMenuItem.setSelected(true);
         temaClaroJRadioButtonMenuItem.setText("Claro");
+        temaClaroJRadioButtonMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temaClaroJRadioButtonMenuItemActionPerformed(evt);
+            }
+        });
         temaJMenu.add(temaClaroJRadioButtonMenuItem);
 
         temaButtonGroup.add(temaOscuroJRadioButtonMenuItem);
         temaOscuroJRadioButtonMenuItem.setText("Oscuro");
+        temaOscuroJRadioButtonMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temaOscuroJRadioButtonMenuItemActionPerformed(evt);
+            }
+        });
         temaJMenu.add(temaOscuroJRadioButtonMenuItem);
 
         mainJMenuBar.add(temaJMenu);
 
+        idiomaJMenu.setBackground(new java.awt.Color(51, 51, 51));
         idiomaJMenu.setText("Idioma");
 
         idiomaButtonGroup.add(castellanoJRadioButtonMenuItem);
@@ -437,7 +478,13 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         mainJMenuBar.add(idiomaJMenu);
 
+        ajustesJMenu.setBackground(new java.awt.Color(51, 51, 51));
         ajustesJMenu.setText("Ajustes");
+        ajustesJMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ajustesJMenuMouseClicked(evt);
+            }
+        });
         ajustesJMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ajustesJMenuActionPerformed(evt);
@@ -451,26 +498,66 @@ public class MainGUIWordle extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+            .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void ajustesJMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustesJMenuActionPerformed
-        if (this.ajustesJMenu.isSelected()) {
-        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true);
-        ajustes.setVisible(true); 
-        }
     }//GEN-LAST:event_ajustesJMenuActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
     }//GEN-LAST:event_sendButtonActionPerformed
 
+    private void temaClaroJRadioButtonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temaClaroJRadioButtonMenuItemActionPerformed
+        seleccionarTema();
+    }//GEN-LAST:event_temaClaroJRadioButtonMenuItemActionPerformed
+
+    private void temaOscuroJRadioButtonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temaOscuroJRadioButtonMenuItemActionPerformed
+        seleccionarTema();
+    }//GEN-LAST:event_temaOscuroJRadioButtonMenuItemActionPerformed
+
+    private void ajustesJMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ajustesJMenuMouseClicked
+        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true);
+        ajustes.setVisible(true); 
+        
+    }//GEN-LAST:event_ajustesJMenuMouseClicked
+
+    private void seleccionarTema(){
+        if(this.temaClaroJRadioButtonMenuItem.isSelected()){
+            this.letrasJPanel.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.goodLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.existsLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.wrongLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.inputJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.messagesJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.wordJTextField.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.wordJTextField.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.sendButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+
+        }
+        else if(this.temaOscuroJRadioButtonMenuItem.isSelected()){
+            this.letrasJPanel.setBackground(FONDO_LETRAS_OSCURO);
+            this.goodLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.existsLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.wrongLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.inputJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.messagesJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.wordJTextField.setBackground(FONDO_MENU_TEXTFIELD_OSCURO);
+            this.wordJTextField.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.sendButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+        }
+    }
+        
     /**
      * @param args the command line arguments
      */
@@ -564,7 +651,7 @@ public class MainGUIWordle extends javax.swing.JFrame {
     private javax.swing.JRadioButtonMenuItem temaClaroJRadioButtonMenuItem;
     private javax.swing.JMenu temaJMenu;
     private javax.swing.JRadioButtonMenuItem temaOscuroJRadioButtonMenuItem;
-    private javax.swing.JTextField wordTextField;
+    private javax.swing.JTextField wordJTextField;
     private javax.swing.JLabel wrongLettersJLabel;
     private javax.swing.JPanel wrongLettersJPanel;
     // End of variables declaration//GEN-END:variables

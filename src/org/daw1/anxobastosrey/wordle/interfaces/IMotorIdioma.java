@@ -5,7 +5,7 @@
  */
 package org.daw1.anxobastosrey.wordle.interfaces;
 
-import org.daw1.anxobastosrey.wordle.classes.Palabra;
+import java.io.IOException;
 
 /**
  *
@@ -13,8 +13,8 @@ import org.daw1.anxobastosrey.wordle.classes.Palabra;
  */
 public interface IMotorIdioma {
     
-    public boolean añadirPalabra(String s);
-    public boolean borrarPalabra(String s);
-    public Palabra generarPalabra();
+    public boolean añadirPalabra(String s)throws IOException;
+    public boolean borrarPalabra(String s) throws IOException;
+    public String generarPalabra() throws IOException;
     
 }

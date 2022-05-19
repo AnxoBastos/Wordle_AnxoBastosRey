@@ -65,7 +65,8 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
      * Creates new form MainGUIWordle
      */
     public MainGUIWordle() {
-        this.sendJButton.addActionListener(this);
+        initComponents();
+        rellenarMatrizLabels();
         this.motor = new MotorArchivo(RUTA_DEFAULT_ES);
         try {
             palabraDelDia = separarPalabra(motor.generarPalabra());
@@ -75,8 +76,8 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         letras.put("GOOD", new TreeSet<Character>());
         letras.put("EXISTS", new TreeSet<Character>());
         letras.put("WRONG", new TreeSet<Character>());
-        initComponents();
-        rellenarMatrizLabels();
+        System.out.println(palabraDelDia.toString());
+        this.sendJButton.addActionListener(this);
     }
     
 //    protected IMotorIdioma getMotor(){
@@ -114,7 +115,18 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         for (int i = 0; i < label.length; i++) {
             JLabel j = label[i];
             Character a = palabra.charAt(i);
-            j.setText(a.toString());
+            if (letras.get("GOOD").contains(a)){
+                j.setText(a.toString()); 
+                j.setForeground(VERDE_LETRAS);
+            }
+            else if(letras.get("EXISTS").contains(a)){
+                j.setText(a.toString()); 
+                j.setForeground(AMARILLO_LETRAS);
+            }
+            else{
+                j.setText(a.toString()); 
+                j.setForeground(ROJO_LETRAS);
+            }            
         }
     }
 
@@ -122,6 +134,7 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(intentos < MAX_INTENTOS){
             String palabra = wordJTextField.getText().toUpperCase();
+            comprobarLetras(palabraDelDia, separarPalabra(palabra));
             rellenarLabels(intentos, palabra);
             intentos++;
             this.goodLettersJLabel.setText(letras.get("GOOD").toString());
@@ -140,6 +153,7 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
                 int pos = dia.indexOf(nextActual);
                 if (pos == actual.indexOf(nextActual)) {
                     letras.get("GOOD").add(nextActual);
+                    letras.get("EXISTS").remove(nextActual);
                 }
                 else{
                     letras.get("EXISTS").add(nextActual);

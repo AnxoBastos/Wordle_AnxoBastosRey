@@ -5,67 +5,96 @@
  */
 package org.daw1.anxobastosrey.wordle.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
+import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
 
 /**
  *
  * @author AnxoN
  */
-public class MainGUIWordle extends javax.swing.JFrame {
+public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
+    
+    //*****************************CONSTANTES*****************************//
     
     private static final java.awt.Color VERDE_LETRAS = new java.awt.Color(102,255,51);
     private static final java.awt.Color AMARILLO_LETRAS = new java.awt.Color(255,204,51);
     private static final java.awt.Color ROJO_LETRAS = new java.awt.Color(255,51,51);
     
-    private static final java.awt.Color FONDO_LETRAS_OSCURO = new java.awt.Color(153,153,153);
-    private static final java.awt.Color FONDO_BOTTOM_OSCURO = new java.awt.Color(102,102,102);
-    private static final java.awt.Color FONDO_MENU_TEXTFIELD_OSCURO = new java.awt.Color(51,51,51);
+    protected static final java.awt.Color FONDO_LETRAS_OSCURO = new java.awt.Color(153,153,153);
+    protected static final java.awt.Color FONDO_BOTTOM_OSCURO = new java.awt.Color(102,102,102);
+    protected static final java.awt.Color FONDO_MENU_TEXTFIELD_OSCURO = new java.awt.Color(51,51,51);
     
-    private static final java.awt.Color FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO = new java.awt.Color(0,0,0);
-    private static final java.awt.Color COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO = new java.awt.Color(255,255,255);
-    private static final java.awt.Color FONDO_BOTTOM_CLARO = new java.awt.Color(204,204,255);
+    protected static final java.awt.Color FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO = new java.awt.Color(0,0,0);
+    protected static final java.awt.Color COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO = new java.awt.Color(255,255,255);
+    protected static final java.awt.Color FONDO_BOTTOM_CLARO = new java.awt.Color(204,204,255);
+    
+    protected static final File RUTA_DEFAULT_ES = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_DEFAULT_ES.txt");
     
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
     
+    private static final Map<String, Set<Character>> letras = new HashMap<>();
+    private static final List<Character> palabraActual = new LinkedList<>();
+    
+    //*****************************VARIABLES*****************************//
+    
+    private static List<Character> palabraDelDia;
+    protected IMotorIdioma motor;
+    private List<String> palabras = new LinkedList<>();
+    private int intentos = 0;
     private final javax.swing.JLabel[][] labels = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
+    
 
     /**
      * Creates new form MainGUIWordle
      */
     public MainGUIWordle() {
+        this.sendJButton.addActionListener(this);
+        this.motor = new MotorArchivo(RUTA_DEFAULT_ES);
+        try {
+            palabraDelDia = separarPalabra(motor.generarPalabra());
+                    } catch (IOException ex) {
+            Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        letras.put("GOOD", new TreeSet<Character>());
+        letras.put("EXISTS", new TreeSet<Character>());
+        letras.put("WRONG", new TreeSet<Character>());
         initComponents();
         rellenarMatrizLabels();
-        test();
     }
     
-    public void test(){
-        for (int i = 0; i < labels.length; i++) {
-            JLabel[] label = labels[i];
-            for (int j = 0; j < label.length; j++) {
-                JLabel jLabel = label[j];
-                jLabel.setForeground(ROJO_LETRAS);
-                
-            }
-        }
-    }
+//    protected IMotorIdioma getMotor(){
+//        return this.motor;
+//    }
     
-    /*public void test(){
-        for (int i = 0; i < labels.length; i++) {
-            JLabel[] label = labels[i];
-            for (int j = 0; j < label.length; j++) {
-                JLabel jLabel = label[j];
-                jLabel.setForeground(ROJO_LETRAS);
-                
-            }
-        }
-    }
-    */
+//    private void test(){
+//        for (int i = 0; i < labels.length; i++) {
+//            JLabel[] label = labels[i];
+//            for (int j = 0; j < label.length; j++) {
+//                JLabel jLabel = label[j];
+//                jLabel.setForeground(ROJO_LETRAS);
+//                
+//            }
+//        }
+//    }
     
-    public final void rellenarMatrizLabels(){
+    private void rellenarMatrizLabels(){
         for (int i = 1; i <= MAX_INTENTOS; i++) {
             for (int j = 1; j <= TAMANHO_PALABRA; j++) {
                 try {
@@ -79,7 +108,56 @@ public class MainGUIWordle extends javax.swing.JFrame {
             }
         }
     }
+    
+    public void rellenarLabels(int fila, String palabra){
+        JLabel[] label = labels[fila];
+        for (int i = 0; i < label.length; i++) {
+            JLabel j = label[i];
+            Character a = palabra.charAt(i);
+            j.setText(a.toString());
+        }
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(intentos < MAX_INTENTOS){
+            String palabra = wordJTextField.getText().toUpperCase();
+            rellenarLabels(intentos, palabra);
+            intentos++;
+            this.goodLettersJLabel.setText(letras.get("GOOD").toString());
+            this.existsLettersJLabel.setText(letras.get("EXISTS").toString());
+            this.wrongLettersJLabel.setText(letras.get("WRONG").toString());
+        }else{
+            this.messagesJLabel.setText("DERROTA");
+        }
+    }
+    
+    public void comprobarLetras(List<Character> dia, List<Character> actual){
+        Iterator<Character> itActual = actual.iterator();
+        while (itActual.hasNext()) {
+            Character nextActual = itActual.next();
+            if(dia.contains(nextActual)){
+                int pos = dia.indexOf(nextActual);
+                if (pos == actual.indexOf(nextActual)) {
+                    letras.get("GOOD").add(nextActual);
+                }
+                else{
+                    letras.get("EXISTS").add(nextActual);
+                }
+            }
+            else{
+                letras.get("WRONG").add(nextActual);
+            }
+        }
+    }
+    
+    private static LinkedList<Character> separarPalabra(String s){
+        LinkedList<Character> l = new LinkedList<>();
+        for(int i = 0; i < TAMANHO_PALABRA; i++){
+            l.add(s.charAt(i));
+        }
+        return l;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -135,11 +213,13 @@ public class MainGUIWordle extends javax.swing.JFrame {
         rightBottomJPanel = new javax.swing.JPanel();
         inputJPanel = new javax.swing.JPanel();
         wordJTextField = new javax.swing.JTextField();
-        sendButton = new javax.swing.JButton();
+        sendJButton = new javax.swing.JButton();
         messagesJPanel = new javax.swing.JPanel();
         messagesJLabel = new javax.swing.JLabel();
         mainJMenuBar = new javax.swing.JMenuBar();
         juegoJMenu = new javax.swing.JMenu();
+        nuevaPartidaJMenuItem = new javax.swing.JMenuItem();
+        salirJuegoMenuItem = new javax.swing.JMenuItem();
         temaJMenu = new javax.swing.JMenu();
         temaClaroJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
         temaOscuroJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
@@ -164,181 +244,181 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         jLabel1x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel1x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1x1.setText("A");
+        jLabel1x1.setText("?");
         jLabel1x1.setToolTipText("");
         letrasJPanel.add(jLabel1x1);
 
         jLabel1x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel1x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1x2.setText("A");
+        jLabel1x2.setText("?");
         jLabel1x2.setToolTipText("");
         letrasJPanel.add(jLabel1x2);
 
         jLabel1x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel1x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1x3.setText("A");
+        jLabel1x3.setText("?");
         jLabel1x3.setToolTipText("");
         letrasJPanel.add(jLabel1x3);
 
         jLabel1x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel1x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1x4.setText("A");
+        jLabel1x4.setText("?");
         jLabel1x4.setToolTipText("");
         letrasJPanel.add(jLabel1x4);
 
         jLabel1x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel1x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1x5.setText("A");
+        jLabel1x5.setText("?");
         jLabel1x5.setToolTipText("");
         letrasJPanel.add(jLabel1x5);
 
         jLabel2x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel2x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2x1.setText("A");
+        jLabel2x1.setText("?");
         jLabel2x1.setToolTipText("");
         letrasJPanel.add(jLabel2x1);
 
         jLabel2x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel2x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2x2.setText("A");
+        jLabel2x2.setText("?");
         jLabel2x2.setToolTipText("");
         letrasJPanel.add(jLabel2x2);
 
         jLabel2x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel2x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2x3.setText("A");
+        jLabel2x3.setText("?");
         jLabel2x3.setToolTipText("");
         letrasJPanel.add(jLabel2x3);
 
         jLabel2x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel2x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2x4.setText("A");
+        jLabel2x4.setText("?");
         jLabel2x4.setToolTipText("");
         letrasJPanel.add(jLabel2x4);
 
         jLabel2x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel2x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2x5.setText("A");
+        jLabel2x5.setText("?");
         jLabel2x5.setToolTipText("");
         letrasJPanel.add(jLabel2x5);
 
         jLabel3x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel3x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3x1.setText("A");
+        jLabel3x1.setText("?");
         jLabel3x1.setToolTipText("");
         letrasJPanel.add(jLabel3x1);
 
         jLabel3x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel3x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3x2.setText("A");
+        jLabel3x2.setText("?");
         jLabel3x2.setToolTipText("");
         letrasJPanel.add(jLabel3x2);
 
         jLabel3x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel3x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3x3.setText("A");
+        jLabel3x3.setText("?");
         jLabel3x3.setToolTipText("");
         letrasJPanel.add(jLabel3x3);
 
         jLabel3x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel3x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3x4.setText("A");
+        jLabel3x4.setText("?");
         jLabel3x4.setToolTipText("");
         letrasJPanel.add(jLabel3x4);
 
         jLabel3x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel3x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3x5.setText("A");
+        jLabel3x5.setText("?");
         jLabel3x5.setToolTipText("");
         letrasJPanel.add(jLabel3x5);
 
         jLabel4x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel4x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4x1.setText("A");
+        jLabel4x1.setText("?");
         jLabel4x1.setToolTipText("");
         letrasJPanel.add(jLabel4x1);
 
         jLabel4x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel4x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4x2.setText("A");
+        jLabel4x2.setText("?");
         jLabel4x2.setToolTipText("");
         letrasJPanel.add(jLabel4x2);
 
         jLabel4x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel4x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4x3.setText("A");
+        jLabel4x3.setText("?");
         jLabel4x3.setToolTipText("");
         letrasJPanel.add(jLabel4x3);
 
         jLabel4x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel4x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4x4.setText("A");
+        jLabel4x4.setText("?");
         jLabel4x4.setToolTipText("");
         letrasJPanel.add(jLabel4x4);
 
         jLabel4x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel4x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4x5.setText("A");
+        jLabel4x5.setText("?");
         jLabel4x5.setToolTipText("");
         letrasJPanel.add(jLabel4x5);
 
         jLabel5x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel5x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5x1.setText("A");
+        jLabel5x1.setText("?");
         jLabel5x1.setToolTipText("");
         letrasJPanel.add(jLabel5x1);
 
         jLabel5x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel5x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5x2.setText("A");
+        jLabel5x2.setText("?");
         jLabel5x2.setToolTipText("");
         letrasJPanel.add(jLabel5x2);
 
         jLabel5x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel5x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5x3.setText("A");
+        jLabel5x3.setText("?");
         jLabel5x3.setToolTipText("");
         letrasJPanel.add(jLabel5x3);
 
         jLabel5x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel5x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5x4.setText("A");
+        jLabel5x4.setText("?");
         jLabel5x4.setToolTipText("");
         letrasJPanel.add(jLabel5x4);
 
         jLabel5x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel5x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5x5.setText("A");
+        jLabel5x5.setText("?");
         jLabel5x5.setToolTipText("");
         letrasJPanel.add(jLabel5x5);
 
         jLabel6x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel6x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6x1.setText("A");
+        jLabel6x1.setText("?");
         jLabel6x1.setToolTipText("");
         letrasJPanel.add(jLabel6x1);
 
         jLabel6x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel6x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6x2.setText("A");
+        jLabel6x2.setText("?");
         jLabel6x2.setToolTipText("");
         letrasJPanel.add(jLabel6x2);
 
         jLabel6x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel6x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6x3.setText("A");
+        jLabel6x3.setText("?");
         jLabel6x3.setToolTipText("");
         letrasJPanel.add(jLabel6x3);
 
         jLabel6x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel6x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6x4.setText("A");
+        jLabel6x4.setText("?");
         jLabel6x4.setToolTipText("");
         letrasJPanel.add(jLabel6x4);
 
         jLabel6x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         jLabel6x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6x5.setText("A");
+        jLabel6x5.setText("?");
         jLabel6x5.setToolTipText("");
         letrasJPanel.add(jLabel6x5);
 
@@ -395,16 +475,16 @@ public class MainGUIWordle extends javax.swing.JFrame {
         wordJTextField.setPreferredSize(new java.awt.Dimension(120, 22));
         inputJPanel.add(wordJTextField);
 
-        sendButton.setBackground(new java.awt.Color(255, 255, 255));
-        sendButton.setForeground(new java.awt.Color(0, 0, 0));
-        sendButton.setText("Enviar");
-        sendButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        sendButton.addActionListener(new java.awt.event.ActionListener() {
+        sendJButton.setBackground(new java.awt.Color(255, 255, 255));
+        sendJButton.setForeground(new java.awt.Color(0, 0, 0));
+        sendJButton.setText("Enviar");
+        sendJButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        sendJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendButtonActionPerformed(evt);
+                sendJButtonActionPerformed(evt);
             }
         });
-        inputJPanel.add(sendButton);
+        inputJPanel.add(sendJButton);
 
         rightBottomJPanel.add(inputJPanel);
 
@@ -426,6 +506,13 @@ public class MainGUIWordle extends javax.swing.JFrame {
 
         juegoJMenu.setBackground(new java.awt.Color(51, 51, 51));
         juegoJMenu.setText("Juego");
+
+        nuevaPartidaJMenuItem.setText("Nueva partida");
+        juegoJMenu.add(nuevaPartidaJMenuItem);
+
+        salirJuegoMenuItem.setText("Salir");
+        juegoJMenu.add(salirJuegoMenuItem);
+
         mainJMenuBar.add(juegoJMenu);
 
         temaJMenu.setBackground(new java.awt.Color(51, 51, 51));
@@ -511,8 +598,8 @@ public class MainGUIWordle extends javax.swing.JFrame {
     private void ajustesJMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustesJMenuActionPerformed
     }//GEN-LAST:event_ajustesJMenuActionPerformed
 
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-    }//GEN-LAST:event_sendButtonActionPerformed
+    private void sendJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendJButtonActionPerformed
+    }//GEN-LAST:event_sendJButtonActionPerformed
 
     private void temaClaroJRadioButtonMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temaClaroJRadioButtonMenuItemActionPerformed
         seleccionarTema();
@@ -538,8 +625,8 @@ public class MainGUIWordle extends javax.swing.JFrame {
             this.messagesJPanel.setBackground(FONDO_BOTTOM_CLARO);
             this.wordJTextField.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.wordJTextField.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            this.sendButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
 
         }
@@ -552,8 +639,8 @@ public class MainGUIWordle extends javax.swing.JFrame {
             this.messagesJPanel.setBackground(FONDO_BOTTOM_OSCURO);
             this.wordJTextField.setBackground(FONDO_MENU_TEXTFIELD_OSCURO);
             this.wordJTextField.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            this.sendButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
         }
     }
@@ -645,8 +732,10 @@ public class MainGUIWordle extends javax.swing.JFrame {
     private javax.swing.JPanel mainJPanel;
     private javax.swing.JLabel messagesJLabel;
     private javax.swing.JPanel messagesJPanel;
+    private javax.swing.JMenuItem nuevaPartidaJMenuItem;
     private javax.swing.JPanel rightBottomJPanel;
-    private javax.swing.JButton sendButton;
+    private javax.swing.JMenuItem salirJuegoMenuItem;
+    private javax.swing.JButton sendJButton;
     private javax.swing.ButtonGroup temaButtonGroup;
     private javax.swing.JRadioButtonMenuItem temaClaroJRadioButtonMenuItem;
     private javax.swing.JMenu temaJMenu;

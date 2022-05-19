@@ -12,8 +12,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedList;
+import java.util.Random;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
 /**
@@ -22,16 +24,17 @@ import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
  */
 public class MotorArchivo implements IMotorIdioma{
     
-    private List<Character> palabraDelDia;
-    private static final File RUTA = null;
+    private File fichero;
     
-    
+    public MotorArchivo(File fichero){
+        this.fichero = fichero;
+    }
 
     @Override
     public boolean añadirPalabra(String s) throws IOException{
-        if((RUTA.exists() && RUTA.canWrite()) || (!RUTA.exists() && RUTA.getParentFile().canWrite())){
-            try(Writer wr = new BufferedWriter(new  FileWriter(RUTA))){
-                wr.write(s);
+        if((this.fichero.exists() && this.fichero.canWrite())){
+            try(Writer wr = new BufferedWriter(new FileWriter(this.fichero))){
+                wr.write(s.toUpperCase());
                 return true;
             }
         }
@@ -42,20 +45,37 @@ public class MotorArchivo implements IMotorIdioma{
 
     @Override
     public boolean borrarPalabra(String s) throws IOException{
-        
+        if((this.fichero.exists() && this.fichero.canWrite())){
+            try(Writer wr = new BufferedWriter(new FileWriter(this.fichero));
+                BufferedReader rd = new BufferedReader(new FileReader(this.fichero))){
+                String palabra = rd.readLine();
+                while(palabra != null){
+                    if(palabra.equals(s.toUpperCase())){
+                        wr.flush();
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
     public String generarPalabra() throws IOException{
-        if(fichero.exists()){
-            StringBuilder sb = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new FileReader(fichero))){
-                String linea = br.readLine();
-                while(linea != null){
-                    sb.append(linea).append("\n");
-                    linea = br.readLine();
+        if(this.fichero.exists()){
+            try (BufferedReader br = new BufferedReader(new FileReader(this.fichero))){
+                List <String> palabras = new ArrayList<>();
+                String palabra = br.readLine();
+                while(palabra != null){
+                    palabras.add(palabra);
+                    palabra = br.readLine();
                 }
-                return sb.toString();
+                int random = new Random().nextInt(palabras.size() - 1);
+                String palabraDelDia = palabras.get(random);
+                return palabraDelDia;
             }
         }
         else{

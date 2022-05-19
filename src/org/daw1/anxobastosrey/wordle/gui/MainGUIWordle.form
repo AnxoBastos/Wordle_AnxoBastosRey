@@ -20,6 +20,18 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Juego"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="nuevaPartidaJMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Nueva partida"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="salirJuegoMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Salir"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="temaJMenu">
           <Properties>
@@ -194,7 +206,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -204,7 +216,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -214,7 +226,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -224,7 +236,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -234,7 +246,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -244,7 +256,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -254,7 +266,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -264,7 +276,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -274,7 +286,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -284,7 +296,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -294,7 +306,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -304,7 +316,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -314,7 +326,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -324,7 +336,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -334,7 +346,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -344,7 +356,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -354,7 +366,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -364,7 +376,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -374,7 +386,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -384,7 +396,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -394,7 +406,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -404,7 +416,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -414,7 +426,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -424,7 +436,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -434,7 +446,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -444,7 +456,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -454,7 +466,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -464,7 +476,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -474,7 +486,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -484,7 +496,7 @@
                   <Font name="Dialog" size="48" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="A"/>
+                <Property name="text" type="java.lang.String" value="?"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -636,7 +648,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="sendButton">
+                    <Component class="javax.swing.JButton" name="sendJButton">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -648,7 +660,7 @@
                         <Property name="horizontalTextPosition" type="int" value="0"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendButtonActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendJButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

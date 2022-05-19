@@ -5,6 +5,10 @@
  */
 package org.daw1.anxobastosrey.wordle.gui;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author AnxoN
@@ -112,6 +116,11 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         insertarJButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         insertarJButton.setText("Añadir");
+        insertarJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertarJButtonActionPerformed(evt);
+            }
+        });
         insertarJPanel.add(insertarJButton);
 
         añadirJPanel.add(insertarJPanel);
@@ -175,6 +184,14 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void insertarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarJButtonActionPerformed
+        try {
+            MainGUIWordle //(insertarJTextField.getText());
+        } catch (IOException ex) {
+            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_insertarJButtonActionPerformed
 
     /**
      * @param args the command line arguments

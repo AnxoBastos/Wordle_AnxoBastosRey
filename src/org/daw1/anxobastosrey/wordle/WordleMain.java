@@ -16,12 +16,14 @@ public class WordleMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        ¿Ruta estatica?
-//        ¿Crear desde el constructor el fichero?
-//        ¿Fichero/carpeta se puede borrar?
-//        ¿Write pone saltos de linea?
-//        ¿Ajustes  separacion con el borde?
-
+//        ¿Ruta estatica? Si
+//        ¿Crear desde el constructor el fichero? Como quieras
+//        ¿Fichero/carpeta se puede borrar? Como quieras
+//        ¿Write pone saltos de linea? No
+//        ¿Ajustes separacion con el borde?
+//        ¿Crear intentos y list en contructor?
+//        ¿Intentos en motor?
+//        ¿Como pasar motor a ajustes
     }
     
 }

@@ -5,6 +5,7 @@
  */
 package org.daw1.anxobastosrey.wordle.interfaces;
 
+import java.io.File;
 import java.io.IOException;
 
 /**

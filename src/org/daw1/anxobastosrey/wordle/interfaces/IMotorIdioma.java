@@ -5,8 +5,8 @@
  */
 package org.daw1.anxobastosrey.wordle.interfaces;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  *
@@ -14,8 +14,8 @@ import java.io.IOException;
  */
 public interface IMotorIdioma {
     
-    public boolean añadirPalabra(String s)throws IOException;
-    public boolean borrarPalabra(String s) throws IOException;
-    public String generarPalabra() throws IOException;
+    public boolean añadirPalabra(String s) throws SQLException, IOException;
+    public boolean borrarPalabra(String s) throws SQLException, IOException;
+    public String generarPalabra() throws SQLException, IOException;
     
 }

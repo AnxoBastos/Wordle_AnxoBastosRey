@@ -33,8 +33,8 @@ public class MotorArchivo implements IMotorIdioma{
     @Override
     public boolean añadirPalabra(String s) throws IOException{
         if((this.fichero.exists() && this.fichero.canWrite())){
-            try(Writer wr = new BufferedWriter(new FileWriter(this.fichero))){
-                wr.write(s.toUpperCase());
+            try(Writer wr = new BufferedWriter(new FileWriter(this.fichero, true))){
+                wr.append("\n").append(s.toUpperCase());
                 return true;
             }
         }
@@ -48,19 +48,21 @@ public class MotorArchivo implements IMotorIdioma{
         if((this.fichero.exists() && this.fichero.canWrite())){
             try(Writer wr = new BufferedWriter(new FileWriter(this.fichero));
                 BufferedReader rd = new BufferedReader(new FileReader(this.fichero))){
-                String palabra = rd.readLine();
-                while(palabra != null){
-                    if(palabra.equals(s.toUpperCase())){
-                        wr.flush();
-                        return true;
+                StringBuilder sb = new StringBuilder();
+                String linea = rd.readLine();
+                while(linea != null){
+                    if(!linea.equals(s.toUpperCase())){
+                        sb.append(linea).append("\n");
                     }
-                    else{
-                        return false;
-                    }
+                    linea = rd.readLine();
                 }
+                wr.append(sb);
+                return true;
             }
         }
-        return false;
+        else{
+            return false;
+        }
     }
 
     @Override
@@ -73,7 +75,7 @@ public class MotorArchivo implements IMotorIdioma{
                     palabras.add(palabra);
                     palabra = br.readLine();
                 }
-                int random = new Random().nextInt(palabras.size() - 1);
+                int random = new Random().nextInt(palabras.size());
                 String palabraDelDia = palabras.get(random);
                 return palabraDelDia;
             }

@@ -5,6 +5,8 @@
  */
 package org.daw1.anxobastosrey.wordle;
 
+import org.daw1.anxobastosrey.wordle.enu.IdiomaBases;
+
 
 /**
  *

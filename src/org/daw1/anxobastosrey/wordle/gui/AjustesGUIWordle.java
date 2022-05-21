@@ -8,6 +8,7 @@ package org.daw1.anxobastosrey.wordle.gui;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
 /**
  *
@@ -15,11 +16,13 @@ import java.util.logging.Logger;
  */
 public class AjustesGUIWordle extends javax.swing.JDialog {
 
+    private IMotorIdioma motor;
     /**
      * Creates new form AjustesGUIWordle
      */
-    public AjustesGUIWordle(java.awt.Frame parent, boolean modal) {
+    public AjustesGUIWordle(java.awt.Frame parent, boolean modal, IMotorIdioma motor) {
         super(parent, modal);
+        this.motor = motor;
         initComponents();
     }
 
@@ -104,12 +107,13 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
         ajustesJPanel.setPreferredSize(new java.awt.Dimension(200, 200));
         ajustesJPanel.setLayout(new java.awt.GridLayout(2, 1));
 
-        añadirJPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 255, 51), 3, true));
+        añadirJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Añadir palabra"));
         añadirJPanel.setLayout(new java.awt.GridLayout(2, 1));
 
         insertarJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 15));
 
         insertarJTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        insertarJTextField.setActionCommand("<Not Set>");
         insertarJTextField.setMinimumSize(new java.awt.Dimension(120, 22));
         insertarJTextField.setPreferredSize(new java.awt.Dimension(120, 22));
         insertarJPanel.add(insertarJTextField);
@@ -137,7 +141,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         ajustesJPanel.add(añadirJPanel);
 
-        borrarJPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 51, 51), 3, true));
+        borrarJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Borrar palabra"));
         borrarJPanel.setLayout(new java.awt.GridLayout(2, 1));
 
         eliminarJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 15));
@@ -149,6 +153,11 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         eliminarJButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         eliminarJButton.setText("Borrar");
+        eliminarJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarJButtonActionPerformed(evt);
+            }
+        });
         eliminarJPanel.add(eliminarJButton);
 
         borrarJPanel.add(eliminarJPanel);
@@ -187,11 +196,31 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
     private void insertarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarJButtonActionPerformed
         try {
-            MainGUIWordle //(insertarJTextField.getText());
+            if(this.insertarJTextField.getText().length() == 5) {
+                motor.añadirPalabra(this.insertarJTextField.getText());
+                this.estadoInsertarJLabel.setText("La palabra se ha insertado con exito");
+            }
+            else{
+                this.estadoInsertarJLabel.setText("ERROR: La palabra tiene que estar formada por 5 letras");
+            }
         } catch (IOException ex) {
             Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_insertarJButtonActionPerformed
+
+    private void eliminarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarJButtonActionPerformed
+        try {
+            if(this.eliminarJTextField.getText().length() == 5) {
+                motor.borrarPalabra(this.eliminarJTextField.getText());
+                this.estadoEliminarJLabel.setText("La palabra se ha borrado con exito");
+            }
+            else{
+                this.estadoEliminarJLabel.setText("ERROR: La palabra tiene que estar formada por 5 letras");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_eliminarJButtonActionPerformed
 
     /**
      * @param args the command line arguments

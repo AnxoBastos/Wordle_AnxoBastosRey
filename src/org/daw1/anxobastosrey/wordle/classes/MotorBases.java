@@ -5,7 +5,13 @@
  */
 package org.daw1.anxobastosrey.wordle.classes;
 
-import java.io.IOException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import org.daw1.anxobastosrey.wordle.enu.IdiomaBases;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
 /**
@@ -14,19 +20,47 @@ import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
  */
 public class MotorBases implements IMotorIdioma{
 
-    @Override
-    public boolean añadirPalabra(String s) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    private static final String URL = "jdbc:sqlite:data/dbwordle.db";
+    
+    private IdiomaBases idioma;
 
-    @Override
-    public boolean borrarPalabra(String s) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String generarPalabra() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public MotorBases(IdiomaBases idioma){
+        this.idioma = idioma;
     }
     
-}
+    
+    
+    @Override
+    public boolean añadirPalabra(String s) throws SQLException {
+        try(Connection conn = DriverManager.getConnection(URL);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra, lang) VALUES (?,?)")){
+            ps.setString(1, s.toUpperCase());
+            ps.setString(2, this.idioma.toString());
+            int cont = ps.executeUpdate();
+            return cont > 0;
+        }
+    }
+
+    @Override
+    public boolean borrarPalabra(String s) throws SQLException {
+        try(Connection conn = DriverManager.getConnection(URL);
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM palabras WHERE (palabra = ? AND lang = ?)")){
+            ps.setString(1, s.toUpperCase());
+            ps.setString(2, this.idioma.toString());
+            int cont = ps.executeUpdate();
+            return cont > 0;
+        }
+    }
+
+    @Override
+    public String generarPalabra() throws SQLException {
+        try(Connection conn = DriverManager.getConnection(this.URL);
+            PreparedStatement ps = conn.prepareStatement("SELECT palabra FROM palabras WHERE lang = ? ORDER BY RANDOM() LIMIT 1")){
+            ps.setString(1, this.idioma.toString());
+            try(ResultSet rs = ps.executeQuery()){
+                String palabra = rs.getString("palabra");
+                return palabra;
+            }
+        }
+    }
+}    

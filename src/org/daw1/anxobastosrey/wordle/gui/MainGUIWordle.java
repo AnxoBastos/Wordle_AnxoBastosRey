@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,6 +24,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
+import org.daw1.anxobastosrey.wordle.classes.MotorBases;
+import org.daw1.anxobastosrey.wordle.enu.IdiomaBases;
 
 /**
  *
@@ -45,6 +48,12 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
     protected static final java.awt.Color FONDO_BOTTOM_CLARO = new java.awt.Color(204,204,255);
     
     protected static final File RUTA_DEFAULT_ES = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_DEFAULT_ES.txt");
+    protected static final File RUTA_FR = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_FR.txt");
+    protected static final File RUTA_EN = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_EN.txt");
+    protected static final File RUTA_PT = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_PT.txt");
+    protected static final File RUTA_GL = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_GL.txt");
+    protected static final File RUTA_IT = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_IT.txt");
+    
     
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
@@ -64,36 +73,21 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
     /**
      * Creates new form MainGUIWordle
      */
-    public MainGUIWordle() {
+    public MainGUIWordle() throws SQLException, IOException {
         initComponents();
         rellenarMatrizLabels();
-        this.motor = new MotorArchivo(RUTA_DEFAULT_ES);
-        try {
-            palabraDelDia = separarPalabra(motor.generarPalabra());
-                    } catch (IOException ex) {
-            Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        letras.put("GOOD", new TreeSet<Character>());
-        letras.put("EXISTS", new TreeSet<Character>());
-        letras.put("WRONG", new TreeSet<Character>());
+        this.motor = new MotorBases(IdiomaBases.ES);
+        palabraDelDia = separarPalabra(motor.generarPalabra());
+        letras.put("GOOD", new TreeSet<>());
+        letras.put("EXISTS", new TreeSet<>());        
+        letras.put("GOODTOTAL", new TreeSet<>());
+        letras.put("EXISTSTOTAL", new TreeSet<>());
+        letras.put("WRONGTOTAL", new TreeSet<>());
         System.out.println(palabraDelDia.toString());
         this.sendJButton.addActionListener(this);
     }
     
-//    protected IMotorIdioma getMotor(){
-//        return this.motor;
-//    }
-    
-//    private void test(){
-//        for (int i = 0; i < labels.length; i++) {
-//            JLabel[] label = labels[i];
-//            for (int j = 0; j < label.length; j++) {
-//                JLabel jLabel = label[j];
-//                jLabel.setForeground(ROJO_LETRAS);
-//                
-//            }
-//        }
-//    }
+    //*****************************JUEGO*****************************//
     
     private void rellenarMatrizLabels(){
         for (int i = 1; i <= MAX_INTENTOS; i++) {
@@ -110,16 +104,29 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         }
     }
     
-    public void rellenarLabels(int fila, String palabra){
+    public void rellenarLabels(int fila, List<Character> palabra){
         JLabel[] label = labels[fila];
         for (int i = 0; i < label.length; i++) {
             JLabel j = label[i];
-            Character a = palabra.charAt(i);
-            if (letras.get("GOOD").contains(a)){
+            Character a = palabra.get(i);
+            if (letras.get("GOOD").contains(a) && !letras.get("EXISTS").contains(a)){
                 j.setText(a.toString()); 
                 j.setForeground(VERDE_LETRAS);
             }
-            else if(letras.get("EXISTS").contains(a)){
+            else if(letras.get("GOOD").contains(a) && letras.get("EXISTS").contains(a)){
+                if (palabraDelDia.get(i).equals(a)) {
+                    j.setText(a.toString()); 
+                    j.setForeground(VERDE_LETRAS);
+                }
+                else if(palabraDelDia.contains(a) && !palabraDelDia.get(i).equals(a)){
+                    j.setText(a.toString());
+                }
+                else{
+                    j.setText(a.toString());
+                    j.setForeground(ROJO_LETRAS);
+                }
+            }
+            else if(letras.get("EXISTS").contains(a) && !letras.get("GOOD").contains(a)){
                 j.setText(a.toString()); 
                 j.setForeground(AMARILLO_LETRAS);
             }
@@ -128,6 +135,8 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
                 j.setForeground(ROJO_LETRAS);
             }            
         }
+        letras.get("GOOD").clear();
+        letras.get("EXISTS").clear();
     }
 
     @Override
@@ -135,32 +144,33 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         if(intentos < MAX_INTENTOS){
             String palabra = wordJTextField.getText().toUpperCase();
             comprobarLetras(palabraDelDia, separarPalabra(palabra));
-            rellenarLabels(intentos, palabra);
+            rellenarLabels(intentos, separarPalabra(palabra));
             intentos++;
-            this.goodLettersJLabel.setText(letras.get("GOOD").toString());
-            this.existsLettersJLabel.setText(letras.get("EXISTS").toString());
-            this.wrongLettersJLabel.setText(letras.get("WRONG").toString());
+            this.goodLettersJLabel.setText(letras.get("GOODTOTAL").toString());
+            this.existsLettersJLabel.setText(letras.get("EXISTSTOTAL").toString());
+            this.wrongLettersJLabel.setText(letras.get("WRONGTOTAL").toString());
         }else{
             this.messagesJLabel.setText("DERROTA");
         }
     }
     
     public void comprobarLetras(List<Character> dia, List<Character> actual){
-        Iterator<Character> itActual = actual.iterator();
-        while (itActual.hasNext()) {
-            Character nextActual = itActual.next();
-            if(dia.contains(nextActual)){
-                int pos = dia.indexOf(nextActual);
-                if (pos == actual.indexOf(nextActual)) {
-                    letras.get("GOOD").add(nextActual);
-                    letras.get("EXISTS").remove(nextActual);
+        for(int i = 0; i < dia.size(); i++) {
+            for (int j = 0; j < actual.size(); j++) {
+                if(dia.contains(actual.get(j))){
+                    if(dia.get(i).equals(actual.get(i))){
+                        letras.get("GOOD").add(actual.get(i));
+                        letras.get("GOODTOTAL").add(actual.get(i));
+                        letras.get("EXISTSTOTAL").remove(actual.get(i));
+                    }
+                    else{
+                        letras.get("EXISTS").add(actual.get(j));
+                        letras.get("EXISTSTOTAL").add(actual.get(j));
+                    }
                 }
                 else{
-                    letras.get("EXISTS").add(nextActual);
+                    letras.get("WRONGTOTAL").add(actual.get(j));
                 }
-            }
-            else{
-                letras.get("WRONG").add(nextActual);
             }
         }
     }
@@ -173,6 +183,37 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         return l;
     }
     
+    //*****************************TEMAS*****************************//
+    
+    private void seleccionarTema(){
+        if(this.temaClaroJRadioButtonMenuItem.isSelected()){
+            this.letrasJPanel.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.goodLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.existsLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.wrongLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.inputJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.messagesJPanel.setBackground(FONDO_BOTTOM_CLARO);
+            this.wordJTextField.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.wordJTextField.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+
+        }
+        else if(this.temaOscuroJRadioButtonMenuItem.isSelected()){
+            this.letrasJPanel.setBackground(FONDO_LETRAS_OSCURO);
+            this.goodLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.existsLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.wrongLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.inputJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.messagesJPanel.setBackground(FONDO_BOTTOM_OSCURO);
+            this.wordJTextField.setBackground(FONDO_MENU_TEXTFIELD_OSCURO);
+            this.wordJTextField.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -243,6 +284,7 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         inglesJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
         francesJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
         italianoJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
+        portuguesJRadioButtonMenuItem = new javax.swing.JRadioButtonMenuItem();
         ajustesJMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -577,6 +619,10 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
         italianoJRadioButtonMenuItem.setText("Italiano");
         idiomaJMenu.add(italianoJRadioButtonMenuItem);
 
+        portuguesJRadioButtonMenuItem.setSelected(true);
+        portuguesJRadioButtonMenuItem.setText("Portugues");
+        idiomaJMenu.add(portuguesJRadioButtonMenuItem);
+
         mainJMenuBar.add(idiomaJMenu);
 
         ajustesJMenu.setBackground(new java.awt.Color(51, 51, 51));
@@ -624,41 +670,12 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
     }//GEN-LAST:event_temaOscuroJRadioButtonMenuItemActionPerformed
 
     private void ajustesJMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ajustesJMenuMouseClicked
-        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true);
+        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true, this.motor);
         ajustes.setVisible(true); 
         
     }//GEN-LAST:event_ajustesJMenuMouseClicked
 
-    private void seleccionarTema(){
-        if(this.temaClaroJRadioButtonMenuItem.isSelected()){
-            this.letrasJPanel.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.goodLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
-            this.existsLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
-            this.wrongLettersJPanel.setBackground(FONDO_BOTTOM_CLARO);
-            this.inputJPanel.setBackground(FONDO_BOTTOM_CLARO);
-            this.messagesJPanel.setBackground(FONDO_BOTTOM_CLARO);
-            this.wordJTextField.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.wordJTextField.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-
-        }
-        else if(this.temaOscuroJRadioButtonMenuItem.isSelected()){
-            this.letrasJPanel.setBackground(FONDO_LETRAS_OSCURO);
-            this.goodLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
-            this.existsLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
-            this.wrongLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
-            this.inputJPanel.setBackground(FONDO_BOTTOM_OSCURO);
-            this.messagesJPanel.setBackground(FONDO_BOTTOM_OSCURO);
-            this.wordJTextField.setBackground(FONDO_MENU_TEXTFIELD_OSCURO);
-            this.wordJTextField.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-        }
-    }
-        
+      
     /**
      * @param args the command line arguments
      */
@@ -747,6 +764,7 @@ public class MainGUIWordle extends javax.swing.JFrame implements ActionListener{
     private javax.swing.JLabel messagesJLabel;
     private javax.swing.JPanel messagesJPanel;
     private javax.swing.JMenuItem nuevaPartidaJMenuItem;
+    private javax.swing.JRadioButtonMenuItem portuguesJRadioButtonMenuItem;
     private javax.swing.JPanel rightBottomJPanel;
     private javax.swing.JMenuItem salirJuegoMenuItem;
     private javax.swing.JButton sendJButton;

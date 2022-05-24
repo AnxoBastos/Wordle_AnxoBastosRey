@@ -9,6 +9,6 @@ package org.daw1.anxobastosrey.wordle.enu;
  *
  * @author AnxoN
  */
-public enum IdiomaBases {
+public enum Idioma {
     ES, GL, EN, FR, IT, PT
 }

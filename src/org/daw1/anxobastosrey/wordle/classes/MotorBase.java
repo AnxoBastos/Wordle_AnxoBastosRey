@@ -5,30 +5,31 @@
  */
 package org.daw1.anxobastosrey.wordle.classes;
 
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import org.daw1.anxobastosrey.wordle.enu.IdiomaBases;
+import org.daw1.anxobastosrey.wordle.enu.Idioma;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
 /**
  *
  * @author AnxoN
  */
-public class MotorBases implements IMotorIdioma{
+public class MotorBase implements IMotorIdioma{
 
     private static final String URL = "jdbc:sqlite:data/dbwordle.db";
     
-    private IdiomaBases idioma;
+    private Idioma idioma;
 
-    public MotorBases(IdiomaBases idioma){
+    public MotorBase(Idioma idioma){
         this.idioma = idioma;
     }
-    
-    
+
+    public Idioma getIdioma() {
+        return idioma;
+    }
     
     @Override
     public boolean añadirPalabra(String s) throws SQLException {

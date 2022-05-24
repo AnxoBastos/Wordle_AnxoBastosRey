@@ -6,8 +6,14 @@
 package org.daw1.anxobastosrey.wordle.gui;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
+import org.daw1.anxobastosrey.wordle.classes.MotorBase;
+import org.daw1.anxobastosrey.wordle.classes.MotorTest;
+import org.daw1.anxobastosrey.wordle.enu.Idioma;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
 /**
@@ -23,9 +29,49 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     public AjustesGUIWordle(java.awt.Frame parent, boolean modal, IMotorIdioma motor) {
         super(parent, modal);
         this.motor = motor;
+        System.out.println();
         initComponents();
+        getSelecciones();
     }
 
+    private AjustesGUIWordle(JFrame jFrame, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+    private void getSelecciones(){
+        switch (this.motor.getClass().getSimpleName()) {
+            case "MotorBase":
+                this.motorBaseJRadioButton.setSelected(true);
+                break;
+            case "MotorArchivo":
+                this.motorArchivoJRadioButton.setSelected(true);
+                break;
+            default:
+                this.motorTestJRadioButton.setSelected(true);
+                break;
+        }
+        switch (this.motor.getIdioma()) {
+            case EN:
+                this.inglesJRadioButton.setSelected(true);
+                break;
+            case ES:
+                this.castellanoJRadioButton.setSelected(true);
+                break;
+            case PT:
+                this.portuguesJRadioButton.setSelected(true);
+                break;
+            case FR:
+                this.francesJRadioButton.setSelected(true);
+                break;
+            case GL:
+                this.gallegoJRadioButton.setSelected(true);
+                break;
+            default:
+                this.italianoJRadioButton.setSelected(true);
+                break;
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,16 +82,26 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     private void initComponents() {
 
         seleccionarMotorButtonGroup = new javax.swing.ButtonGroup();
+        seleccionarTemaButtonGroup = new javax.swing.ButtonGroup();
+        seleccionarIdiomaButtonGroup = new javax.swing.ButtonGroup();
         mainJPanel = new javax.swing.JPanel();
-        tituloJPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        ajustesJPanel = new javax.swing.JPanel();
+        elegirMotorJPanel = new javax.swing.JPanel();
+        textoMotorJLabel = new javax.swing.JLabel();
+        motorBaseJRadioButton = new javax.swing.JRadioButton();
+        motorArchivoJRadioButton = new javax.swing.JRadioButton();
+        motorTestJRadioButton = new javax.swing.JRadioButton();
+        elegirIdiomaJPanel = new javax.swing.JPanel();
+        textoIdiomaJLabel = new javax.swing.JLabel();
+        castellanoJRadioButton = new javax.swing.JRadioButton();
+        gallegoJRadioButton = new javax.swing.JRadioButton();
+        inglesJRadioButton = new javax.swing.JRadioButton();
+        portuguesJRadioButton = new javax.swing.JRadioButton();
+        italianoJRadioButton = new javax.swing.JRadioButton();
+        francesJRadioButton = new javax.swing.JRadioButton();
+        elegirTemaJPanel = new javax.swing.JPanel();
+        textoTemaJLabel = new javax.swing.JLabel();
+        temaClaroJRadioButton = new javax.swing.JRadioButton();
+        temaOscuroJRadioButton = new javax.swing.JRadioButton();
         añadirJPanel = new javax.swing.JPanel();
         insertarJPanel = new javax.swing.JPanel();
         insertarJTextField = new javax.swing.JTextField();
@@ -58,59 +114,148 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
         eliminarJButton = new javax.swing.JButton();
         estadoEliminarJPanel = new javax.swing.JPanel();
         estadoEliminarJLabel = new javax.swing.JLabel();
+        mostrarPalabrasJPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DAW1 Ajustes Wordle AnxoBastosRey");
 
-        mainJPanel.setPreferredSize(new java.awt.Dimension(300, 300));
-        mainJPanel.setLayout(new java.awt.BorderLayout());
+        mainJPanel.setMaximumSize(new java.awt.Dimension(400, 400));
+        mainJPanel.setMinimumSize(new java.awt.Dimension(400, 400));
+        mainJPanel.setPreferredSize(new java.awt.Dimension(400, 400));
 
-        tituloJPanel.setMinimumSize(new java.awt.Dimension(100, 100));
-        tituloJPanel.setPreferredSize(new java.awt.Dimension(100, 100));
-        tituloJPanel.setLayout(new java.awt.GridLayout(2, 1));
-
-        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 20);
+        elegirMotorJPanel.setAutoscrolls(true);
+        elegirMotorJPanel.setMinimumSize(new java.awt.Dimension(400, 30));
+        elegirMotorJPanel.setPreferredSize(new java.awt.Dimension(400, 30));
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT);
         flowLayout1.setAlignOnBaseline(true);
-        jPanel1.setLayout(flowLayout1);
+        elegirMotorJPanel.setLayout(flowLayout1);
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jLabel1.setText("Elegir un motor:");
-        jPanel1.add(jLabel1);
+        textoMotorJLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        textoMotorJLabel.setText("Elegir un motor:");
+        elegirMotorJPanel.add(textoMotorJLabel);
 
-        seleccionarMotorButtonGroup.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton1.setText("Base de datos");
-        jPanel1.add(jRadioButton1);
+        seleccionarMotorButtonGroup.add(motorBaseJRadioButton);
+        motorBaseJRadioButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        motorBaseJRadioButton.setSelected(true);
+        motorBaseJRadioButton.setText("Base de datos");
+        motorBaseJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                motorBaseJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirMotorJPanel.add(motorBaseJRadioButton);
 
-        seleccionarMotorButtonGroup.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton2.setSelected(true);
-        jRadioButton2.setText("Archivo");
-        jPanel1.add(jRadioButton2);
+        seleccionarMotorButtonGroup.add(motorArchivoJRadioButton);
+        motorArchivoJRadioButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        motorArchivoJRadioButton.setText("Archivo");
+        motorArchivoJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                motorArchivoJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirMotorJPanel.add(motorArchivoJRadioButton);
 
-        seleccionarMotorButtonGroup.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton3.setText("Test");
-        jPanel1.add(jRadioButton3);
+        seleccionarMotorButtonGroup.add(motorTestJRadioButton);
+        motorTestJRadioButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        motorTestJRadioButton.setText("Test");
+        motorTestJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                motorTestJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirMotorJPanel.add(motorTestJRadioButton);
 
-        tituloJPanel.add(jPanel1);
+        mainJPanel.add(elegirMotorJPanel);
 
-        jButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jButton1.setText("Mostrar palabras");
-        jPanel2.add(jButton1);
+        elegirIdiomaJPanel.setMinimumSize(new java.awt.Dimension(400, 50));
+        elegirIdiomaJPanel.setPreferredSize(new java.awt.Dimension(400, 50));
+        elegirIdiomaJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        tituloJPanel.add(jPanel2);
+        textoIdiomaJLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        textoIdiomaJLabel.setText("Elegir un idioma:");
+        elegirIdiomaJPanel.add(textoIdiomaJLabel);
 
-        mainJPanel.add(tituloJPanel, java.awt.BorderLayout.PAGE_START);
+        seleccionarIdiomaButtonGroup.add(castellanoJRadioButton);
+        castellanoJRadioButton.setSelected(true);
+        castellanoJRadioButton.setText("Castellano");
+        castellanoJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                castellanoJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirIdiomaJPanel.add(castellanoJRadioButton);
 
-        ajustesJPanel.setMinimumSize(new java.awt.Dimension(200, 200));
-        ajustesJPanel.setPreferredSize(new java.awt.Dimension(200, 200));
-        ajustesJPanel.setLayout(new java.awt.GridLayout(2, 1));
+        seleccionarIdiomaButtonGroup.add(gallegoJRadioButton);
+        gallegoJRadioButton.setText("Gallego");
+        gallegoJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gallegoJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirIdiomaJPanel.add(gallegoJRadioButton);
+
+        seleccionarIdiomaButtonGroup.add(inglesJRadioButton);
+        inglesJRadioButton.setText("Ingles");
+        inglesJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inglesJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirIdiomaJPanel.add(inglesJRadioButton);
+
+        seleccionarIdiomaButtonGroup.add(portuguesJRadioButton);
+        portuguesJRadioButton.setText("Portugues");
+        portuguesJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portuguesJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirIdiomaJPanel.add(portuguesJRadioButton);
+
+        seleccionarIdiomaButtonGroup.add(italianoJRadioButton);
+        italianoJRadioButton.setText("Italiano");
+        italianoJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                italianoJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirIdiomaJPanel.add(italianoJRadioButton);
+
+        seleccionarIdiomaButtonGroup.add(francesJRadioButton);
+        francesJRadioButton.setText("Frances");
+        francesJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                francesJRadioButtonActionPerformed(evt);
+            }
+        });
+        elegirIdiomaJPanel.add(francesJRadioButton);
+
+        mainJPanel.add(elegirIdiomaJPanel);
+
+        elegirTemaJPanel.setMinimumSize(new java.awt.Dimension(400, 30));
+        elegirTemaJPanel.setPreferredSize(new java.awt.Dimension(400, 30));
+        elegirTemaJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        textoTemaJLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        textoTemaJLabel.setText("Elegir un tema:");
+        elegirTemaJPanel.add(textoTemaJLabel);
+
+        seleccionarTemaButtonGroup.add(temaClaroJRadioButton);
+        temaClaroJRadioButton.setSelected(true);
+        temaClaroJRadioButton.setText("Claro");
+        elegirTemaJPanel.add(temaClaroJRadioButton);
+
+        seleccionarTemaButtonGroup.add(temaOscuroJRadioButton);
+        temaOscuroJRadioButton.setText("Oscuro");
+        elegirTemaJPanel.add(temaOscuroJRadioButton);
+
+        mainJPanel.add(elegirTemaJPanel);
 
         añadirJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Añadir palabra"));
-        añadirJPanel.setLayout(new java.awt.GridLayout(2, 1));
-
-        insertarJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 15));
+        añadirJPanel.setMinimumSize(new java.awt.Dimension(400, 105));
+        añadirJPanel.setPreferredSize(new java.awt.Dimension(400, 105));
+        añadirJPanel.setLayout(new java.awt.GridLayout(2, 0));
 
         insertarJTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         insertarJTextField.setActionCommand("<Not Set>");
@@ -129,7 +274,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         añadirJPanel.add(insertarJPanel);
 
-        estadoInsertarJPanel.setLayout(new java.awt.GridLayout(1, 1));
+        estadoInsertarJPanel.setLayout(new java.awt.GridLayout());
 
         estadoInsertarJLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         estadoInsertarJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -139,12 +284,15 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         añadirJPanel.add(estadoInsertarJPanel);
 
-        ajustesJPanel.add(añadirJPanel);
+        mainJPanel.add(añadirJPanel);
 
         borrarJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Borrar palabra"));
+        borrarJPanel.setMinimumSize(new java.awt.Dimension(400, 105));
+        borrarJPanel.setPreferredSize(new java.awt.Dimension(400, 105));
         borrarJPanel.setLayout(new java.awt.GridLayout(2, 1));
 
-        eliminarJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 15));
+        eliminarJPanel.setMinimumSize(new java.awt.Dimension(207, 30));
+        eliminarJPanel.setPreferredSize(new java.awt.Dimension(207, 30));
 
         eliminarJTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         eliminarJTextField.setMinimumSize(new java.awt.Dimension(120, 22));
@@ -162,6 +310,8 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         borrarJPanel.add(eliminarJPanel);
 
+        estadoEliminarJPanel.setMinimumSize(new java.awt.Dimension(200, 30));
+        estadoEliminarJPanel.setPreferredSize(new java.awt.Dimension(200, 30));
         estadoEliminarJPanel.setLayout(new java.awt.GridLayout(1, 1));
 
         estadoEliminarJLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -172,9 +322,15 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         borrarJPanel.add(estadoEliminarJPanel);
 
-        ajustesJPanel.add(borrarJPanel);
+        mainJPanel.add(borrarJPanel);
 
-        mainJPanel.add(ajustesJPanel, java.awt.BorderLayout.CENTER);
+        mostrarPalabrasJPanel.setPreferredSize(new java.awt.Dimension(400, 40));
+
+        jButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jButton1.setText("Mostrar palabras");
+        mostrarPalabrasJPanel.add(jButton1);
+
+        mainJPanel.add(mostrarPalabrasJPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,31 +338,17 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mainJPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 310, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mainJPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void insertarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarJButtonActionPerformed
-        try {
-            if(this.insertarJTextField.getText().length() == 5) {
-                motor.añadirPalabra(this.insertarJTextField.getText());
-                this.estadoInsertarJLabel.setText("La palabra se ha insertado con exito");
-            }
-            else{
-                this.estadoInsertarJLabel.setText("ERROR: La palabra tiene que estar formada por 5 letras");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_insertarJButtonActionPerformed
 
     private void eliminarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarJButtonActionPerformed
         try {
@@ -219,8 +361,74 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
             }
         } catch (IOException ex) {
             Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_eliminarJButtonActionPerformed
+
+    private void motorBaseJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motorBaseJRadioButtonActionPerformed
+        this.motor = new MotorBase(this.motor.getIdioma());
+    }//GEN-LAST:event_motorBaseJRadioButtonActionPerformed
+
+    private void motorArchivoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motorArchivoJRadioButtonActionPerformed
+        this.motor = new MotorArchivo(this.motor.getIdioma());
+    }//GEN-LAST:event_motorArchivoJRadioButtonActionPerformed
+
+    private void motorTestJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motorTestJRadioButtonActionPerformed
+        this.motor = new MotorTest();
+    }//GEN-LAST:event_motorTestJRadioButtonActionPerformed
+
+    private void insertarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarJButtonActionPerformed
+        try {
+            if(this.insertarJTextField.getText().length() == 5) {
+                motor.añadirPalabra(this.insertarJTextField.getText());
+                this.estadoInsertarJLabel.setText("La palabra se ha insertado con exito");
+            }
+            else{
+                this.estadoInsertarJLabel.setText("ERROR: La palabra tiene que estar formada por 5 letras");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_insertarJButtonActionPerformed
+
+    public void seleccionarIdioma(Idioma idioma){
+        if(this.motorArchivoJRadioButton.isSelected()) {
+            this.motor = new MotorArchivo(idioma);
+        }
+        else if(this.motorBaseJRadioButton.isSelected()){
+            this.motor = new MotorBase(idioma);
+        }
+        else{
+            this.motor = new MotorTest();
+        }
+    }
+    
+    private void castellanoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_castellanoJRadioButtonActionPerformed
+        seleccionarIdioma(Idioma.ES);
+    }//GEN-LAST:event_castellanoJRadioButtonActionPerformed
+
+    private void gallegoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gallegoJRadioButtonActionPerformed
+        seleccionarIdioma(Idioma.GL);
+    }//GEN-LAST:event_gallegoJRadioButtonActionPerformed
+
+    private void inglesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inglesJRadioButtonActionPerformed
+        seleccionarIdioma(Idioma.EN);
+    }//GEN-LAST:event_inglesJRadioButtonActionPerformed
+
+    private void portuguesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portuguesJRadioButtonActionPerformed
+        seleccionarIdioma(Idioma.PT);
+    }//GEN-LAST:event_portuguesJRadioButtonActionPerformed
+
+    private void italianoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italianoJRadioButtonActionPerformed
+        seleccionarIdioma(Idioma.IT);
+    }//GEN-LAST:event_italianoJRadioButtonActionPerformed
+
+    private void francesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_francesJRadioButtonActionPerformed
+        seleccionarIdioma(Idioma.FR);
+    }//GEN-LAST:event_francesJRadioButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -265,9 +473,12 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel ajustesJPanel;
     private javax.swing.JPanel añadirJPanel;
     private javax.swing.JPanel borrarJPanel;
+    private javax.swing.JRadioButton castellanoJRadioButton;
+    private javax.swing.JPanel elegirIdiomaJPanel;
+    private javax.swing.JPanel elegirMotorJPanel;
+    private javax.swing.JPanel elegirTemaJPanel;
     private javax.swing.JButton eliminarJButton;
     private javax.swing.JPanel eliminarJPanel;
     private javax.swing.JTextField eliminarJTextField;
@@ -275,18 +486,27 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     private javax.swing.JPanel estadoEliminarJPanel;
     private javax.swing.JLabel estadoInsertarJLabel;
     private javax.swing.JPanel estadoInsertarJPanel;
+    private javax.swing.JRadioButton francesJRadioButton;
+    private javax.swing.JRadioButton gallegoJRadioButton;
+    private javax.swing.JRadioButton inglesJRadioButton;
     private javax.swing.JButton insertarJButton;
     private javax.swing.JPanel insertarJPanel;
     private javax.swing.JTextField insertarJTextField;
+    private javax.swing.JRadioButton italianoJRadioButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JPanel mainJPanel;
+    private javax.swing.JPanel mostrarPalabrasJPanel;
+    private javax.swing.JRadioButton motorArchivoJRadioButton;
+    private javax.swing.JRadioButton motorBaseJRadioButton;
+    private javax.swing.JRadioButton motorTestJRadioButton;
+    private javax.swing.JRadioButton portuguesJRadioButton;
+    private javax.swing.ButtonGroup seleccionarIdiomaButtonGroup;
     private javax.swing.ButtonGroup seleccionarMotorButtonGroup;
-    private javax.swing.JPanel tituloJPanel;
+    private javax.swing.ButtonGroup seleccionarTemaButtonGroup;
+    private javax.swing.JRadioButton temaClaroJRadioButton;
+    private javax.swing.JRadioButton temaOscuroJRadioButton;
+    private javax.swing.JLabel textoIdiomaJLabel;
+    private javax.swing.JLabel textoMotorJLabel;
+    private javax.swing.JLabel textoTemaJLabel;
     // End of variables declaration//GEN-END:variables
 }

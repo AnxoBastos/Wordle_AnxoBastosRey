@@ -27,5 +27,4 @@ public class WordleMain {
 //        ¿Intentos en motor?
 //        ¿Como pasar motor a ajustes
     }
-    
 }

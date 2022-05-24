@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
 import org.daw1.anxobastosrey.wordle.classes.MotorBase;
@@ -58,6 +59,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
     private static int intentos = 0;
     protected IMotorIdioma motor;
     
+    //*****************************CONSTRUCTOR*****************************//
 
     /**
      * Creates new form MainGUIWordle
@@ -106,12 +108,9 @@ public class MainGUIWordle extends javax.swing.JFrame{
                     j.setText(a.toString()); 
                     j.setForeground(VERDE_LETRAS);
                 }
-                else if(palabraDelDia.contains(a) && !palabraDelDia.get(i).equals(a) ){
-                    
-                }
                 else{
                     j.setText(a.toString());
-                    j.setForeground(ROJO_LETRAS);
+                    j.setForeground(AMARILLO_LETRAS);
                 }
             }
             else if(LETRAS.get("EXISTS").contains(a) && !LETRAS.get("GOOD").contains(a)){
@@ -568,14 +567,9 @@ public class MainGUIWordle extends javax.swing.JFrame{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void reiniciarMotor(){
-        try {
-            palabraDelDia = separarPalabra(this.motor.generarPalabra());
-        } catch (SQLException ex) {
-            Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void reiniciarMotor() throws SQLException, IOException{
+        palabraDelDia = separarPalabra(this.motor.generarPalabra());
+        
     }
     
     private void ajustesJMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustesJMenuActionPerformed
@@ -604,11 +598,31 @@ public class MainGUIWordle extends javax.swing.JFrame{
     private void ajustesJMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ajustesJMenuMouseClicked
         AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true, this.motor);
         ajustes.setVisible(true);
+        if(this.motor != ajustes.getMotor()){
+            this.motor = ajustes.getMotor();
+            try{
+                reiniciarMotor();
+            }
+            catch(SQLException ex){
+                showMessageDialog(ex);
+            } 
+            catch(IOException ex){
+                showMessageDialog(ex);
+            }
+        }
     }//GEN-LAST:event_ajustesJMenuMouseClicked
 
     
     private void nuevaPartidaJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidaJMenuItemActionPerformed
-        reiniciarMotor();
+        try{
+            reiniciarMotor();
+        }
+        catch(SQLException ex){
+            showMessageDialog(ex);
+        }
+        catch(IOException ex){
+            showMessageDialog(ex);
+        }
         System.out.println(palabraDelDia.toString());
     }//GEN-LAST:event_nuevaPartidaJMenuItemActionPerformed
 
@@ -652,6 +666,10 @@ public class MainGUIWordle extends javax.swing.JFrame{
                 }
             }
         });
+    }
+    
+    public void showMessageDialog(Exception ex){
+        JOptionPane.showMessageDialog(this, "Excepcion en app: " + ex.getMessage());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

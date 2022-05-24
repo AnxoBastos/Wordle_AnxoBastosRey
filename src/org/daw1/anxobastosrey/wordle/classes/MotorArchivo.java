@@ -62,6 +62,11 @@ public class MotorArchivo implements IMotorIdioma{
         }
     }
     
+    //checkpalabra a setprecreado si añades palabra se añade y borrar igual
+    //llenar string y write
+    //tema color main
+    
+    
     @Override
     public Idioma getIdioma() {
         return idioma;
@@ -106,17 +111,13 @@ public class MotorArchivo implements IMotorIdioma{
                 Writer wrFichero = new BufferedWriter(new FileWriter(this.fichero, true))){
                 String linea = br.readLine();
                 while(linea != null){
-                    if(!linea.equals(s)){
+                    if(!linea.equals(s.toUpperCase())){
                         p.add(linea);
                     }
-                    br.readLine();
+                    linea = br.readLine();
                 }
-                br.close();
                 for(String sa : p){
                     wr.append(sa).append("\n");
-                }
-                for(String sa : p){
-                    wrFichero.append(sa).append("\n");
                 }
                 return true;
         }

@@ -31,6 +31,9 @@ public class MotorBase implements IMotorIdioma{
         return idioma;
     }
     
+    //checkpalabra select
+    //SELECT COUNT(*) AS TOTAL WHERE lang ? ? AND palabra = ? rs.next()
+    
     @Override
     public boolean añadirPalabra(String s) throws SQLException {
         try(Connection conn = DriverManager.getConnection(URL);
@@ -56,8 +59,9 @@ public class MotorBase implements IMotorIdioma{
     @Override
     public String generarPalabra() throws SQLException {
         try(Connection conn = DriverManager.getConnection(this.URL);
-            PreparedStatement ps = conn.prepareStatement("SELECT palabra FROM palabras WHERE lang = ? ORDER BY RANDOM() LIMIT 1")){
+            PreparedStatement ps = conn.prepareStatement("SELECT palabra FROM palabras WHERE lang = ? LIMIT ?, 1")){
             ps.setString(1, this.idioma.toString());
+            //ps.setInt(2, Math.random());
             try(ResultSet rs = ps.executeQuery()){
                 String palabra = rs.getString("palabra");
                 return palabra;

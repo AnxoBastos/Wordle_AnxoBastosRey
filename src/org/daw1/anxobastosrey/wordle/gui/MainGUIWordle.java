@@ -5,26 +5,30 @@
  */
 package org.daw1.anxobastosrey.wordle.gui;
 
-import java.awt.event.ActionEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
-import org.daw1.anxobastosrey.wordle.classes.MotorBase;
+import org.daw1.anxobastosrey.wordle.classes.PairMotorTema;
 import org.daw1.anxobastosrey.wordle.enu.Idioma;
 
 /**
@@ -50,31 +54,44 @@ public class MainGUIWordle extends javax.swing.JFrame{
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
     
-    private final javax.swing.JLabel[][] LABELS = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
+    public static final File CARPETA = new File(Paths.get(".") + File.separator + "data");
+    private static final File GUARDADO = new File(Paths.get(".") + File.separator + "data" + File.separator + "guardado.dat");
+    
+    private static final javax.swing.JLabel[][] LABELS = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
     private static final Map<String, Set<Character>> LETRAS = new HashMap<>();
     
     //*****************************VARIABLES*****************************//
     
-    private static List<Character> palabraDelDia;
-    private static int intentos = 0;
-    protected IMotorIdioma motor;
+    private String palabraDelDia;
+    private IMotorIdioma motor = new MotorArchivo(Idioma.ES);
+    private int intentos = 0;
+    private Boolean tema = false;
     
     //*****************************CONSTRUCTOR*****************************//
 
     /**
      * Creates new form MainGUIWordle
      */
-    public MainGUIWordle() throws SQLException, IOException {
+    public MainGUIWordle() throws SQLException, IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
-        rellenarMatrizLabels();
-        this.motor = new MotorArchivo(Idioma.ES);
-        palabraDelDia = separarPalabra(motor.generarPalabra());
+        if (cargarMotor() != null) {
+            PairMotorTema c = cargarMotor();
+            this.motor = (IMotorIdioma)c.getMotor();
+            this.tema = (Boolean)c.getTema();
+        }
+        seleccionarTema();
+        this.palabraDelDia = motor.generarPalabra();
+        
         LETRAS.put("GOOD", new TreeSet<>());
-        LETRAS.put("EXISTS", new TreeSet<>());        
+        LETRAS.put("EXISTS", new TreeSet<>()); 
+        
         LETRAS.put("GOODTOTAL", new TreeSet<>());
         LETRAS.put("EXISTSTOTAL", new TreeSet<>());
         LETRAS.put("WRONGTOTAL", new TreeSet<>());
-        System.out.println(palabraDelDia.toString());
+        
+        rellenarMatrizLabels();
+        
+        System.out.println(palabraDelDia);
     }
     
     //*****************************JUEGO*****************************//
@@ -94,23 +111,22 @@ public class MainGUIWordle extends javax.swing.JFrame{
         }
     }
     
-    public void rellenarLabels(int fila, List<Character> palabra){
+    public void rellenarLabels(int fila, String palabra){
         JLabel[] label = LABELS[fila];
         for (int i = 0; i < label.length; i++) {
             JLabel j = label[i];
-            Character a = palabra.get(i);
+            Character a = palabra.charAt(i);
             if (LETRAS.get("GOOD").contains(a) && !LETRAS.get("EXISTS").contains(a)){
                 j.setText(a.toString()); 
                 j.setForeground(VERDE_LETRAS);
             }
             else if(LETRAS.get("GOOD").contains(a) && LETRAS.get("EXISTS").contains(a)){
-                if (palabraDelDia.get(i).equals(a)) {
+                if (palabraDelDia.charAt(i) == a) {
                     j.setText(a.toString()); 
                     j.setForeground(VERDE_LETRAS);
                 }
                 else{
                     j.setText(a.toString());
-                    j.setForeground(AMARILLO_LETRAS);
                 }
             }
             else if(LETRAS.get("EXISTS").contains(a) && !LETRAS.get("GOOD").contains(a)){
@@ -126,17 +142,18 @@ public class MainGUIWordle extends javax.swing.JFrame{
         LETRAS.get("EXISTS").clear();
     }
     
-    public void comprobarLetras(List<Character> dia, List<Character> actual){
-        for(int i = 0; i < dia.size(); i++) {
-            for (int j = 0; j < actual.size(); j++) {
-                if(dia.contains(actual.get(j))){
-                    if(dia.get(i).equals(actual.get(i))){
-                        LETRAS.get("GOOD").add(actual.get(i));
+    public void comprobarLetras(String actual){
+        for(int i = 0; i < this.palabraDelDia.length(); i++) {
+            for (int j = 0; j < actual.length(); j++) {
+                Character ch = actual.charAt(j);
+                if(this.palabraDelDia.contains(ch.toString())){
+                    if(this.palabraDelDia.charAt(i) == actual.charAt(i)){
+                        this.LETRAS.get("GOOD").add(actual.charAt(i));
                         //letras.get("GOODTOTAL").add(actual.get(i));
                         //letras.get("EXISTSTOTAL").remove(actual.get(i));
                     }
                     else{
-                        LETRAS.get("EXISTS").add(actual.get(j));
+                        this.LETRAS.get("EXISTS").add(actual.charAt(j));
                         //letras.get("EXISTSTOTAL").add(actual.get(j));
                     }
                 }
@@ -146,19 +163,37 @@ public class MainGUIWordle extends javax.swing.JFrame{
             }
         }
     }
-    
-    private static LinkedList<Character> separarPalabra(String s){
-        LinkedList<Character> l = new LinkedList<>();
-        for(int i = 0; i < TAMANHO_PALABRA; i++){
-            l.add(s.charAt(i));
-        }
-        return l;
-    }
-    
+
     //*****************************TEMAS*****************************//
     
+    private void cambiarColorLetras(){
+        for (int i = 1; i <= MAX_INTENTOS; i++) {
+            for (int j = 1; j <= TAMANHO_PALABRA; j++) {
+                String nombreLabel = "jLabel" + i + "x" + j;
+                javax.swing.JLabel aux;
+                try {
+                    aux = (javax.swing.JLabel) this.getClass().getDeclaredField(nombreLabel).get(this);
+                    if (this.tema == true) {
+                        aux.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+                    }
+                    else{
+                        aux.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+                    }
+                } catch (NoSuchFieldException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }    
+    }
+    
     private void seleccionarTema(){
-        if(true){
+        if(this.tema == true){
             this.lettersJPanel.setBackground(FONDO_LETRAS_OSCURO);
             this.goodLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
             this.existsLettersJPanel.setBackground(FONDO_BOTTOM_OSCURO);
@@ -170,6 +205,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
+            cambiarColorLetras();
         }
         else{
             this.lettersJPanel.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
@@ -183,6 +219,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            cambiarColorLetras();
         }
     }
     /**
@@ -255,7 +292,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
         mainJPanel.setLayout(new java.awt.BorderLayout());
 
         lettersJPanel.setBackground(new java.awt.Color(255, 255, 255));
-        lettersJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 3));
+        lettersJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         lettersJPanel.setForeground(new java.awt.Color(204, 204, 255));
         lettersJPanel.setLayout(new java.awt.GridLayout(6, 5));
 
@@ -441,7 +478,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
 
         mainJPanel.add(lettersJPanel, java.awt.BorderLayout.CENTER);
 
-        bottomJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 3));
+        bottomJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         bottomJPanel.setForeground(new java.awt.Color(0, 0, 0));
         bottomJPanel.setPreferredSize(new java.awt.Dimension(200, 100));
         bottomJPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -533,6 +570,11 @@ public class MainGUIWordle extends javax.swing.JFrame{
         juegoJMenu.add(nuevaPartidaJMenuItem);
 
         salirJuegoMenuItem.setText("Salir");
+        salirJuegoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirJuegoMenuItemActionPerformed(evt);
+            }
+        });
         juegoJMenu.add(salirJuegoMenuItem);
 
         mainJMenuBar.add(juegoJMenu);
@@ -566,26 +608,34 @@ public class MainGUIWordle extends javax.swing.JFrame{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void reiniciarMotor() throws SQLException, IOException{
-        palabraDelDia = separarPalabra(this.motor.generarPalabra());
-        
-    }
     
     private void ajustesJMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustesJMenuActionPerformed
     }//GEN-LAST:event_ajustesJMenuActionPerformed
 
     private void sendJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendJButtonActionPerformed
-        if(intentos < MAX_INTENTOS){
-            if (this.wordJTextField.getText().length() == 5) {
-                String palabra = this.wordJTextField.getText().toUpperCase();
-                comprobarLetras(palabraDelDia, separarPalabra(palabra));
-                rellenarLabels(intentos, separarPalabra(palabra));
-                intentos++;
-                this.goodLettersJLabel.setText(LETRAS.get("GOODTOTAL").toString());
-                this.existsLettersJLabel.setText(LETRAS.get("EXISTSTOTAL").toString());
-                this.wrongLettersJLabel.setText(LETRAS.get("WRONGTOTAL").toString());
-                this.messagesJLabel.setText("Inserte una palabra de 5 letras");
+        if(this.intentos < MAX_INTENTOS){
+            String palabra = this.wordJTextField.getText().toUpperCase();
+            if (palabra.matches("[A-Z]{5}")) {
+                try {
+                    if(this.motor.existePalabra(palabra)){
+                        comprobarLetras(palabra);
+                        rellenarLabels(this.intentos, palabra);
+                        this.intentos++;
+                        if (this.palabraDelDia.equals(palabra)){
+                            this.messagesJLabel.setText("VICTORIA");
+                            this.mainJPanel.setEnabled(false);
+                        }
+                        this.goodLettersJLabel.setText(LETRAS.get("GOODTOTAL").toString());
+                        this.existsLettersJLabel.setText(LETRAS.get("EXISTSTOTAL").toString());
+                        this.wrongLettersJLabel.setText(LETRAS.get("WRONGTOTAL").toString());
+                        this.messagesJLabel.setText("Inserte una palabra de 5 letras");
+                    }
+                    else{
+                        this.messagesJLabel.setText("ERROR: La palabra insertada no existe");
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Excepcion en app: " + ex.getMessage());
+                }
             }
             else{
                 this.messagesJLabel.setText("ERROR: Debe insertar una palabra de 5 letras");
@@ -596,8 +646,12 @@ public class MainGUIWordle extends javax.swing.JFrame{
     }//GEN-LAST:event_sendJButtonActionPerformed
 
     private void ajustesJMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ajustesJMenuMouseClicked
-        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true, this.motor);
+        AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true, this.motor, this.tema);
         ajustes.setVisible(true);
+        if(this.tema != ajustes.getTema()){
+            this.tema = ajustes.getTema();
+            seleccionarTema();
+        }
         if(this.motor != ajustes.getMotor()){
             this.motor = ajustes.getMotor();
             try{
@@ -623,8 +677,17 @@ public class MainGUIWordle extends javax.swing.JFrame{
         catch(IOException ex){
             showMessageDialog(ex);
         }
-        System.out.println(palabraDelDia.toString());
+        System.out.println(this.palabraDelDia);
     }//GEN-LAST:event_nuevaPartidaJMenuItemActionPerformed
+
+    private void salirJuegoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirJuegoMenuItemActionPerformed
+        try {
+            guardarMotor();
+        } catch (IOException ex) {
+            Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.exit(0);
+    }//GEN-LAST:event_salirJuegoMenuItemActionPerformed
 
       
     /**
@@ -663,6 +726,8 @@ public class MainGUIWordle extends javax.swing.JFrame{
                     Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -670,6 +735,45 @@ public class MainGUIWordle extends javax.swing.JFrame{
     
     public void showMessageDialog(Exception ex){
         JOptionPane.showMessageDialog(this, "Excepcion en app: " + ex.getMessage());
+    }
+
+    private void reiniciarMotor() throws SQLException, IOException{
+        this.palabraDelDia = this.motor.generarPalabra();
+        seleccionarTema();
+    }
+    
+    private PairMotorTema cargarMotor() throws FileNotFoundException, IOException, ClassNotFoundException{
+        if(GUARDADO.exists() && GUARDADO.canRead()) {
+            try (InputStream in = new FileInputStream(GUARDADO);
+                ObjectInputStream objIn = new ObjectInputStream(new BufferedInputStream(in))){                    
+                PairMotorTema c = (PairMotorTema)objIn.readObject();
+                return c;
+            }
+        }
+        else{
+            return null;
+        }
+    }
+    
+    private void guardarMotor() throws FileNotFoundException, IOException{
+        if(GUARDADO.exists() && GUARDADO.canWrite()) {
+            try (OutputStream out = new FileOutputStream(GUARDADO);
+                ObjectOutputStream outObj = new ObjectOutputStream(new BufferedOutputStream(out))){                    
+                PairMotorTema g = new PairMotorTema(this.motor, this.tema);
+                outObj.writeObject(g);
+            }
+        }
+        if (!GUARDADO.exists()) {
+            if (!CARPETA.exists()) {
+                CARPETA.mkdir();
+            }
+            GUARDADO.createNewFile();
+            try (OutputStream out = new FileOutputStream(GUARDADO);
+                ObjectOutputStream outObj = new ObjectOutputStream(new BufferedOutputStream(out))){                    
+                PairMotorTema g = new PairMotorTema(this.motor, this.tema);
+                outObj.writeObject(g);
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

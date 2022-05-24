@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
 import org.daw1.anxobastosrey.wordle.classes.MotorBase;
 import org.daw1.anxobastosrey.wordle.classes.MotorTest;
@@ -23,21 +24,23 @@ import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 public class AjustesGUIWordle extends javax.swing.JDialog {
 
     private IMotorIdioma motor;
+    private Boolean tema;
     /**
      * Creates new form AjustesGUIWordle
      */
-    public AjustesGUIWordle(java.awt.Frame parent, boolean modal, IMotorIdioma motor) {
+    public AjustesGUIWordle(java.awt.Frame parent, boolean modal, IMotorIdioma motor, Boolean tema) {
         super(parent, modal);
         this.motor = motor;
-        System.out.println();
+        this.tema = tema;
         initComponents();
         getSelecciones();
-    }
+    }    
 
     private AjustesGUIWordle(JFrame jFrame, boolean b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    //*****************************GETTERS*****************************//
     
     private void getSelecciones(){
         switch (this.motor.getClass().getSimpleName()) {
@@ -71,11 +74,22 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
                 this.italianoJRadioButton.setSelected(true);
                 break;
         }
+        if (this.tema == false) {
+            this.temaClaroJRadioButton.setSelected(true);
+        }
+        else{
+            this.temaOscuroJRadioButton.setSelected(true);
+        }
+    }
+    
+    public Boolean getTema(){
+        return this.tema;
     }
     
     public IMotorIdioma getMotor(){
         return this.motor;
     }
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -248,10 +262,20 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
         seleccionarTemaButtonGroup.add(temaClaroJRadioButton);
         temaClaroJRadioButton.setSelected(true);
         temaClaroJRadioButton.setText("Claro");
+        temaClaroJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temaClaroJRadioButtonActionPerformed(evt);
+            }
+        });
         elegirTemaJPanel.add(temaClaroJRadioButton);
 
         seleccionarTemaButtonGroup.add(temaOscuroJRadioButton);
         temaOscuroJRadioButton.setText("Oscuro");
+        temaOscuroJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temaOscuroJRadioButtonActionPerformed(evt);
+            }
+        });
         elegirTemaJPanel.add(temaOscuroJRadioButton);
 
         mainJPanel.add(elegirTemaJPanel);
@@ -278,7 +302,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         añadirJPanel.add(insertarJPanel);
 
-        estadoInsertarJPanel.setLayout(new java.awt.GridLayout());
+        estadoInsertarJPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         estadoInsertarJLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         estadoInsertarJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -357,16 +381,23 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     private void eliminarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarJButtonActionPerformed
         try {
             if(this.eliminarJTextField.getText().length() == 5) {
-                motor.borrarPalabra(this.eliminarJTextField.getText());
-                this.estadoEliminarJLabel.setText("La palabra se ha borrado con exito");
+                if(this.motor.borrarPalabra(this.eliminarJTextField.getText())){
+                    this.eliminarJTextField.setText("");
+                    this.estadoEliminarJLabel.setText("La palabra se ha borrado con exito");
+                }
+                else{
+                    this.eliminarJTextField.setText("");
+                    this.estadoEliminarJLabel.setText("ERROR: La palabra que desea borrar no existe");
+                }
             }
             else{
+                this.eliminarJTextField.setText("");
                 this.estadoEliminarJLabel.setText("ERROR: La palabra tiene que estar formada por 5 letras");
             }
         } catch (IOException ex) {
-            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+            showMessageDialog(ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+            showMessageDialog(ex);
         }
     }//GEN-LAST:event_eliminarJButtonActionPerformed
 
@@ -375,7 +406,11 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     }//GEN-LAST:event_motorBaseJRadioButtonActionPerformed
 
     private void motorArchivoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motorArchivoJRadioButtonActionPerformed
-        this.motor = new MotorArchivo(this.motor.getIdioma());
+        try {
+            this.motor = new MotorArchivo(this.motor.getIdioma());
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_motorArchivoJRadioButtonActionPerformed
 
     private void motorTestJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motorTestJRadioButtonActionPerformed
@@ -385,20 +420,27 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     private void insertarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarJButtonActionPerformed
         try {
             if(this.insertarJTextField.getText().length() == 5) {
-                motor.añadirPalabra(this.insertarJTextField.getText());
-                this.estadoInsertarJLabel.setText("La palabra se ha insertado con exito");
+                if(this.motor.añadirPalabra(this.insertarJTextField.getText())){
+                    this.insertarJTextField.setText("");
+                    this.estadoInsertarJLabel.setText("La palabra se ha insertado con exito");
+                }
+                else{
+                    this.insertarJTextField.setText("");
+                    this.estadoInsertarJLabel.setText("ERROR: La palabra que desea insertar ya existe");
+                }
             }
             else{
+                this.insertarJTextField.setText("");
                 this.estadoInsertarJLabel.setText("ERROR: La palabra tiene que estar formada por 5 letras");
             }
         } catch (IOException ex) {
-            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+            showMessageDialog(ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AjustesGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+            showMessageDialog(ex);
         }
     }//GEN-LAST:event_insertarJButtonActionPerformed
 
-    public void seleccionarIdioma(Idioma idioma){
+    private void seleccionarIdioma(Idioma idioma) throws IOException{
         if(this.motorArchivoJRadioButton.isSelected()) {
             this.motor = new MotorArchivo(idioma);
         }
@@ -411,28 +453,60 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     }
     
     private void castellanoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_castellanoJRadioButtonActionPerformed
-        seleccionarIdioma(Idioma.ES);
+        try {
+            seleccionarIdioma(Idioma.ES);
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_castellanoJRadioButtonActionPerformed
 
     private void gallegoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gallegoJRadioButtonActionPerformed
-        seleccionarIdioma(Idioma.GL);
+        try {
+            seleccionarIdioma(Idioma.GL);
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_gallegoJRadioButtonActionPerformed
 
     private void inglesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inglesJRadioButtonActionPerformed
-        seleccionarIdioma(Idioma.EN);
+        try {
+            seleccionarIdioma(Idioma.EN);
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_inglesJRadioButtonActionPerformed
 
     private void portuguesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portuguesJRadioButtonActionPerformed
-        seleccionarIdioma(Idioma.PT);
+        try {
+            seleccionarIdioma(Idioma.PT);
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_portuguesJRadioButtonActionPerformed
 
     private void italianoJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italianoJRadioButtonActionPerformed
-        seleccionarIdioma(Idioma.IT);
+        try {
+            seleccionarIdioma(Idioma.IT);
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_italianoJRadioButtonActionPerformed
 
     private void francesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_francesJRadioButtonActionPerformed
-        seleccionarIdioma(Idioma.FR);
+        try {
+            seleccionarIdioma(Idioma.FR);
+        } catch (IOException ex) {
+            showMessageDialog(ex);
+        }
     }//GEN-LAST:event_francesJRadioButtonActionPerformed
+
+    private void temaOscuroJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temaOscuroJRadioButtonActionPerformed
+        this.tema = true;
+    }//GEN-LAST:event_temaOscuroJRadioButtonActionPerformed
+
+    private void temaClaroJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temaClaroJRadioButtonActionPerformed
+        this.tema = false;
+    }//GEN-LAST:event_temaClaroJRadioButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -474,6 +548,10 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    public void showMessageDialog(Exception ex){
+        JOptionPane.showMessageDialog(this, "Excepcion en app: " + ex.getMessage());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

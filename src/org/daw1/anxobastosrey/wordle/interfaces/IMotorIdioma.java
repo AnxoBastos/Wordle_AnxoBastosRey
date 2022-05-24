@@ -15,6 +15,7 @@ import org.daw1.anxobastosrey.wordle.enu.Idioma;
  */
 public interface IMotorIdioma{
     
+    public boolean existePalabra(String s) throws SQLException;
     public boolean añadirPalabra(String s) throws SQLException, IOException;
     public boolean borrarPalabra(String s) throws SQLException, IOException;
     public String generarPalabra() throws SQLException, IOException;

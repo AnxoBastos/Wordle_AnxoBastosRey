@@ -35,5 +35,10 @@ public class MotorTest implements IMotorIdioma{
     public Idioma getIdioma() {
         return Idioma.ES;
     }
+
+    @Override
+    public boolean existePalabra(String s) throws SQLException {
+        return true;
+    }
     
 }

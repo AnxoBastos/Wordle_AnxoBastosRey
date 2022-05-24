@@ -25,22 +25,13 @@ import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
  *
  * @author AnxoN
  */
-public class MotorArchivo implements IMotorIdioma{
-    
-    
-    protected static final File RUTA_DEFAULT = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_DEFAULT.txt");
-    protected static final File RUTA_DEFAULT_ES = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_DEFAULT_ES.txt");
-    protected static final File RUTA_FR = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_FR.txt");
-    protected static final File RUTA_EN = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_EN.txt");
-    protected static final File RUTA_PT = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_PT.txt");
-    protected static final File RUTA_GL = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_GL.txt");
-    protected static final File RUTA_IT = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_IT.txt");
-    
+public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
 
-    private File fichero;
-    private Idioma idioma;
+    private final File fichero;
+    private final Idioma idioma;
+    private final Set<String> palabras = new HashSet<>();;
     
-    public MotorArchivo(Idioma idioma){
+    public MotorArchivo(Idioma idioma) throws IOException{
         this.idioma = idioma;
         if(this.idioma == Idioma.EN){
             this.fichero = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_EN.txt");
@@ -60,10 +51,21 @@ public class MotorArchivo implements IMotorIdioma{
         else{
             this.fichero = new File(Paths.get(".") + File.separator + "data" + File.separator + "PALABRAS_IT.txt");
         }
+        cargarPalabras();
     }
     
-    //checkpalabra a setprecreado si añades palabra se añade y borrar igual
-    //llenar string y write
+    
+    @Override
+    public boolean existePalabra(String s){
+        s = s.toUpperCase();
+        if(this.palabras.contains(s)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     //tema color main
     
     
@@ -74,9 +76,11 @@ public class MotorArchivo implements IMotorIdioma{
 
     @Override
     public boolean añadirPalabra(String s) throws IOException{
-        if((this.fichero.exists() && this.fichero.canWrite())){
+        s = s.toUpperCase();
+        if(this.fichero.exists() && this.fichero.canWrite() && !existePalabra(s)){
             try(Writer wr = new BufferedWriter(new FileWriter(this.fichero, true))){
-                wr.append("\n").append(s.toUpperCase());
+                wr.append(s).append("\n");
+                this.palabras.add(s);
                 return true;
             }
         }
@@ -87,42 +91,20 @@ public class MotorArchivo implements IMotorIdioma{
 
     @Override
     public boolean borrarPalabra(String s) throws IOException{
-//        if((this.fichero.exists() && this.fichero.canWrite())){
-//            try(Writer wr = new BufferedWriter(new FileWriter(this.fichero));
-//                BufferedReader rd = new BufferedReader(new FileReader(this.fichero))){
-//                StringBuilder sb = new StringBuilder();
-//                String linea = rd.readLine();
-//                while(linea != null){
-//                    if(!linea.equals(s.toUpperCase())){
-//                        sb.append(linea).append("\n");
-//                    }
-//                    linea = rd.readLine();
-//                }
-//                wr.write(sb.toString());
-//                return true;
-//            }
-//        }
-//        else{
-//            return false;
-//        }
-        Set<String> p = new HashSet<>();
-        try(BufferedReader br = new BufferedReader(new FileReader(this.fichero));
-                Writer wr = new BufferedWriter(new FileWriter(RUTA_DEFAULT, true));
-                Writer wrFichero = new BufferedWriter(new FileWriter(this.fichero, true))){
-                String linea = br.readLine();
-                while(linea != null){
-                    if(!linea.equals(s.toUpperCase())){
-                        p.add(linea);
-                    }
-                    linea = br.readLine();
-                }
-                for(String sa : p){
-                    wr.append(sa).append("\n");
+        s = s.toUpperCase();
+        if(this.fichero.exists() && this.fichero.canWrite() && existePalabra(s)){
+            try(Writer wr = new BufferedWriter(new FileWriter(this.fichero))){
+                this.palabras.remove(s);
+                for (String palabra : palabras) {
+                    wr.append(palabra).append("\n");
                 }
                 return true;
+            }
+        }
+        else{
+            return false;
         }
     }
-
     @Override
     public String generarPalabra() throws IOException{
         if(this.fichero.exists()){
@@ -140,6 +122,16 @@ public class MotorArchivo implements IMotorIdioma{
         }
         else{
             return null;
+        }
+    }
+    
+    private void cargarPalabras() throws IOException{
+        try(BufferedReader br = new BufferedReader(new FileReader(this.fichero))){
+            String linea = br.readLine();
+            while(linea != null){
+                this.palabras.add(linea);
+                linea = br.readLine();
+            }
         }
     }
 }

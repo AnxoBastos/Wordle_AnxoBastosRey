@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Random;
 import org.daw1.anxobastosrey.wordle.enu.Idioma;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
@@ -89,7 +90,8 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
         try(Connection conn = DriverManager.getConnection(this.URL);
             PreparedStatement ps = conn.prepareStatement("SELECT palabra FROM palabras WHERE lang = ? LIMIT ?, 1")){
             ps.setString(1, this.idioma.toString());
-            ps.setInt(2, (int)Math.random() * 3);
+            Random random = new java.util.Random();
+            ps.setInt(2, random.nextInt(tamanhoBase()));
             try(ResultSet rs = ps.executeQuery()){
                 String palabra = rs.getString("palabra");
                 return palabra;
@@ -98,17 +100,13 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
     }
     
     private int tamanhoBase() throws SQLException{
-        int resultado = 0;
         try(Connection conn = DriverManager.getConnection(this.URL);
             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS TOTAL WHERE lang = ?")){
             ps.setString(1, this.idioma.toString());
             try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
-                    resultado = rs.getInt("TOTAL");
-                }
+                return rs.getInt("TOTAL");
             }
         }
-        return resultado;
     }
 
 }    

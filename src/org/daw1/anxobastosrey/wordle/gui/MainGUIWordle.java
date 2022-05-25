@@ -166,32 +166,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
 
     //*****************************TEMAS*****************************//
     
-    private void cambiarColorLetras(){
-        for (int i = 1; i <= MAX_INTENTOS; i++) {
-            for (int j = 1; j <= TAMANHO_PALABRA; j++) {
-                String nombreLabel = "jLabel" + i + "x" + j;
-                javax.swing.JLabel aux;
-                try {
-                    aux = (javax.swing.JLabel) this.getClass().getDeclaredField(nombreLabel).get(this);
-                    if (this.tema == true) {
-                        aux.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-                    }
-                    else{
-                        aux.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-                    }
-                } catch (NoSuchFieldException ex) {
-                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }    
-    }
-    
     private void seleccionarTema(){
         if(this.tema == true){
             this.lettersJPanel.setBackground(FONDO_LETRAS_OSCURO);
@@ -205,7 +179,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            cambiarColorLetras();
         }
         else{
             this.lettersJPanel.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
@@ -219,7 +192,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            cambiarColorLetras();
         }
     }
     /**
@@ -231,8 +203,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        temaButtonGroup = new javax.swing.ButtonGroup();
-        idiomaButtonGroup = new javax.swing.ButtonGroup();
         mainJPanel = new javax.swing.JPanel();
         lettersJPanel = new javax.swing.JPanel();
         jLabel1x1 = new javax.swing.JLabel();
@@ -288,6 +258,11 @@ public class MainGUIWordle extends javax.swing.JFrame{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DAW1 Wordle AnxoBastosRey");
         setMinimumSize(new java.awt.Dimension(500, 500));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         mainJPanel.setLayout(new java.awt.BorderLayout());
 
@@ -297,180 +272,210 @@ public class MainGUIWordle extends javax.swing.JFrame{
         lettersJPanel.setLayout(new java.awt.GridLayout(6, 5));
 
         jLabel1x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel1x1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1x1.setText("?");
         jLabel1x1.setToolTipText("");
         lettersJPanel.add(jLabel1x1);
 
         jLabel1x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel1x2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1x2.setText("?");
         jLabel1x2.setToolTipText("");
         lettersJPanel.add(jLabel1x2);
 
         jLabel1x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel1x3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1x3.setText("?");
         jLabel1x3.setToolTipText("");
         lettersJPanel.add(jLabel1x3);
 
         jLabel1x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel1x4.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1x4.setText("?");
         jLabel1x4.setToolTipText("");
         lettersJPanel.add(jLabel1x4);
 
         jLabel1x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel1x5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1x5.setText("?");
         jLabel1x5.setToolTipText("");
         lettersJPanel.add(jLabel1x5);
 
         jLabel2x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel2x1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2x1.setText("?");
         jLabel2x1.setToolTipText("");
         lettersJPanel.add(jLabel2x1);
 
         jLabel2x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel2x2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2x2.setText("?");
         jLabel2x2.setToolTipText("");
         lettersJPanel.add(jLabel2x2);
 
         jLabel2x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel2x3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2x3.setText("?");
         jLabel2x3.setToolTipText("");
         lettersJPanel.add(jLabel2x3);
 
         jLabel2x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel2x4.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2x4.setText("?");
         jLabel2x4.setToolTipText("");
         lettersJPanel.add(jLabel2x4);
 
         jLabel2x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel2x5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel2x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2x5.setText("?");
         jLabel2x5.setToolTipText("");
         lettersJPanel.add(jLabel2x5);
 
         jLabel3x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel3x1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3x1.setText("?");
         jLabel3x1.setToolTipText("");
         lettersJPanel.add(jLabel3x1);
 
         jLabel3x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel3x2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3x2.setText("?");
         jLabel3x2.setToolTipText("");
         lettersJPanel.add(jLabel3x2);
 
         jLabel3x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel3x3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3x3.setText("?");
         jLabel3x3.setToolTipText("");
         lettersJPanel.add(jLabel3x3);
 
         jLabel3x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel3x4.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3x4.setText("?");
         jLabel3x4.setToolTipText("");
         lettersJPanel.add(jLabel3x4);
 
         jLabel3x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel3x5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3x5.setText("?");
         jLabel3x5.setToolTipText("");
         lettersJPanel.add(jLabel3x5);
 
         jLabel4x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel4x1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel4x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4x1.setText("?");
         jLabel4x1.setToolTipText("");
         lettersJPanel.add(jLabel4x1);
 
         jLabel4x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel4x2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel4x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4x2.setText("?");
         jLabel4x2.setToolTipText("");
         lettersJPanel.add(jLabel4x2);
 
         jLabel4x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel4x3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel4x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4x3.setText("?");
         jLabel4x3.setToolTipText("");
         lettersJPanel.add(jLabel4x3);
 
         jLabel4x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel4x4.setForeground(new java.awt.Color(204, 204, 204));
         jLabel4x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4x4.setText("?");
         jLabel4x4.setToolTipText("");
         lettersJPanel.add(jLabel4x4);
 
         jLabel4x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel4x5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel4x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4x5.setText("?");
         jLabel4x5.setToolTipText("");
         lettersJPanel.add(jLabel4x5);
 
         jLabel5x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel5x1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5x1.setText("?");
         jLabel5x1.setToolTipText("");
         lettersJPanel.add(jLabel5x1);
 
         jLabel5x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel5x2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5x2.setText("?");
         jLabel5x2.setToolTipText("");
         lettersJPanel.add(jLabel5x2);
 
         jLabel5x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel5x3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5x3.setText("?");
         jLabel5x3.setToolTipText("");
         lettersJPanel.add(jLabel5x3);
 
         jLabel5x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel5x4.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5x4.setText("?");
         jLabel5x4.setToolTipText("");
         lettersJPanel.add(jLabel5x4);
 
         jLabel5x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel5x5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5x5.setText("?");
         jLabel5x5.setToolTipText("");
         lettersJPanel.add(jLabel5x5);
 
         jLabel6x1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel6x1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel6x1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6x1.setText("?");
         jLabel6x1.setToolTipText("");
         lettersJPanel.add(jLabel6x1);
 
         jLabel6x2.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel6x2.setForeground(new java.awt.Color(204, 204, 204));
         jLabel6x2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6x2.setText("?");
         jLabel6x2.setToolTipText("");
         lettersJPanel.add(jLabel6x2);
 
         jLabel6x3.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel6x3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel6x3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6x3.setText("?");
         jLabel6x3.setToolTipText("");
         lettersJPanel.add(jLabel6x3);
 
         jLabel6x4.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel6x4.setForeground(new java.awt.Color(204, 204, 204));
         jLabel6x4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6x4.setText("?");
         jLabel6x4.setToolTipText("");
         lettersJPanel.add(jLabel6x4);
 
         jLabel6x5.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        jLabel6x5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel6x5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6x5.setText("?");
         jLabel6x5.setToolTipText("");
@@ -689,6 +694,15 @@ public class MainGUIWordle extends javax.swing.JFrame{
         System.exit(0);
     }//GEN-LAST:event_salirJuegoMenuItemActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try{
+            guardarMotor();
+        }
+        catch(IOException ex){
+            Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
       
     /**
      * @param args the command line arguments
@@ -783,7 +797,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
     private javax.swing.JPanel existsLettersJPanel;
     private javax.swing.JLabel goodLettersJLabel;
     private javax.swing.JPanel goodLettersJPanel;
-    private javax.swing.ButtonGroup idiomaButtonGroup;
     private javax.swing.JPanel inputJPanel;
     private javax.swing.JLabel jLabel1x1;
     private javax.swing.JLabel jLabel1x2;
@@ -826,7 +839,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
     private javax.swing.JPanel rightBottomJPanel;
     private javax.swing.JMenuItem salirJuegoMenuItem;
     private javax.swing.JButton sendJButton;
-    private javax.swing.ButtonGroup temaButtonGroup;
     private javax.swing.JTextField wordJTextField;
     private javax.swing.JLabel wrongLettersJLabel;
     private javax.swing.JPanel wrongLettersJPanel;

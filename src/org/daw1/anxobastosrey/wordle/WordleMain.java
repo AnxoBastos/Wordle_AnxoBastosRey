@@ -5,6 +5,10 @@
  */
 package org.daw1.anxobastosrey.wordle;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
+import org.daw1.anxobastosrey.wordle.classes.MotorBase;
 import org.daw1.anxobastosrey.wordle.enu.Idioma;
 
 
@@ -17,14 +21,8 @@ public class WordleMain {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-//        ¿Ruta estatica? Si
-//        ¿Crear desde el constructor el fichero? Como quieras
-//        ¿Fichero/carpeta se puede borrar? Como quieras
-//        ¿Write pone saltos de linea? No
-//        ¿Ajustes separacion con el borde?
-//        ¿Crear intentos y list en contructor?
-//        ¿Intentos en motor?
-//        ¿Como pasar motor a ajustes
+    public static void main(String[] args) throws SQLException, IOException {
+        MotorArchivo motor = new MotorArchivo(Idioma.ES);
+        System.out.println(motor.mostrarPalabras());
     }
 }

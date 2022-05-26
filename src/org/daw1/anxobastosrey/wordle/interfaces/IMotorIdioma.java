@@ -20,5 +20,6 @@ public interface IMotorIdioma{
     public boolean borrarPalabra(String s) throws SQLException, IOException;
     public String generarPalabra() throws SQLException, IOException;
     public Idioma getIdioma();
+    public String mostrarPalabras() throws SQLException;
     
 }

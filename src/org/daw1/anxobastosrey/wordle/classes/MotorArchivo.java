@@ -15,6 +15,7 @@ import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -104,6 +105,7 @@ public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
             return false;
         }
     }
+    
     @Override
     public String generarPalabra() throws IOException{
         if(this.fichero.exists()){
@@ -132,5 +134,24 @@ public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
                 linea = br.readLine();
             }
         }
+    }
+    
+    @Override
+    public String mostrarPalabras(){
+        Iterator<String> it = palabras.iterator();
+        StringBuilder sb = new StringBuilder();
+        int contador = 0;
+        while (it.hasNext()) {
+            String next = it.next();
+            sb.append(next).append(", ");
+            contador++;
+            if (contador == 7) {
+                sb.append("\n");
+                contador = 0;
+            }
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append(".");
+        return sb.toString();
     }
 }

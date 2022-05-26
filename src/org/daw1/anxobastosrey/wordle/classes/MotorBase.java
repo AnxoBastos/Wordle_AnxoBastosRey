@@ -57,7 +57,7 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
         if(!existePalabra(s)){
             try(Connection conn = DriverManager.getConnection(URL);
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra, lang) VALUES (?,?)")){
-                ps.setString(1, s.toUpperCase());
+                ps.setString(1, s);
                 ps.setString(2, this.idioma.toString());
                 int cont = ps.executeUpdate();
                 return cont > 0;
@@ -106,6 +106,29 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
             try(ResultSet rs = ps.executeQuery()){
                 return rs.getInt("TOTAL");
             }
+        }
+    }
+    
+    @Override
+    public String mostrarPalabras() throws SQLException{
+        try(Connection conn = DriverManager.getConnection(URL);
+            PreparedStatement ps = conn.prepareStatement("SELECT palabra FROM palabras WHERE lang = ?")){
+            ps.setString(1, this.idioma.toString());
+            StringBuilder sb = new StringBuilder();
+            try(ResultSet rs = ps.executeQuery()){
+                int contador = 0;
+                while(rs.next()){
+                    sb.append(rs.getString("palabra")).append(", ");
+                    contador++;
+                    if (contador == 7) {
+                        sb.append("\n");
+                        contador = 0;
+                    }
+                }
+            }
+            sb.delete(sb.length() - 2, sb.length());
+            sb.append(".");
+            return sb.toString();
         }
     }
 

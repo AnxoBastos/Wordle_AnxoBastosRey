@@ -514,7 +514,11 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     }//GEN-LAST:event_temaClaroJRadioButtonActionPerformed
 
     private void mostraPalabrasJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostraPalabrasJButtonActionPerformed
-        
+        try {
+            JOptionPane.showMessageDialog(this, this.motor.mostrarPalabras());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Excepcion en app: " + ex.getMessage());
+        }
     }//GEN-LAST:event_mostraPalabrasJButtonActionPerformed
 
     /**

@@ -7,9 +7,9 @@ package org.daw1.anxobastosrey.wordle;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import org.daw1.anxobastosrey.wordle.classes.MotorArchivo;
-import org.daw1.anxobastosrey.wordle.classes.MotorBase;
-import org.daw1.anxobastosrey.wordle.enu.Idioma;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.daw1.anxobastosrey.wordle.gui.MainGUIWordle;
 
 
 /**
@@ -22,7 +22,18 @@ public class WordleMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException, IOException {
-        MotorArchivo motor = new MotorArchivo(Idioma.ES);
-        System.out.println(motor.mostrarPalabras());
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new MainGUIWordle().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 }

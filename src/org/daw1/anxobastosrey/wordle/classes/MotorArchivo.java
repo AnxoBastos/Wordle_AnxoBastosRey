@@ -150,8 +150,6 @@ public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
                 contador = 0;
             }
         }
-        sb.delete(sb.length() - 2, sb.length());
-        sb.append(".");
         return sb.toString();
     }
 }

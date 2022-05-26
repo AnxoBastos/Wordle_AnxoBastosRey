@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -48,9 +49,8 @@ public class MainGUIWordle extends javax.swing.JFrame{
     protected static final java.awt.Color FONDO_LETRAS_OSCURO = new java.awt.Color(153,153,153);
     protected static final java.awt.Color FONDO_BOTTOM_OSCURO = new java.awt.Color(102,102,102);
     protected static final java.awt.Color FONDO_MENU_TEXTFIELD_OSCURO = new java.awt.Color(51,51,51);
-    protected static final java.awt.Color FONDO_BUTTOM_OSCURO = new java.awt.Color(0,0,0);
     
-    protected static final java.awt.Color COLOR_LETRAS_CLARO = new java.awt.Color(51,51,51);
+    protected static final java.awt.Color FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO = new java.awt.Color(51,51,51);
     protected static final java.awt.Color COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO = new java.awt.Color(255,255,255);
     protected static final java.awt.Color FONDO_BOTTOM_CLARO = new java.awt.Color(204,204,255);
     
@@ -81,6 +81,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             PairMotorTema c = cargarMotor();
             this.motor = c.getMotor();
             this.tema = c.getTema();
+            seleccionarTema();
         }
         LETRAS.put("GOOD", new TreeSet<>());
         LETRAS.put("EXISTS", new TreeSet<>());
@@ -88,7 +89,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
         LETRAS.put("EXISTSTOTAL", new TreeSet<>());
         LETRAS.put("WRONGTOTAL", new TreeSet<>());
         this.palabraDelDia = motor.generarPalabra();
-        seleccionarTema();
         rellenarMatrizLabels();
         System.out.println(this.palabraDelDia);
     }
@@ -130,13 +130,18 @@ public class MainGUIWordle extends javax.swing.JFrame{
                 }
                 else{
                     j.setText(a.toString());
-                    j.setForeground(NEGRO_LETRAS);
+                    j.setForeground(AMARILLO_LETRAS);
+                    if (!LETRAS.get("GOODTOTAL").contains(a)) {
+                    LETRAS.get("EXISTSTOTAL").add(a);
+                    }
                 }
             }
             else if(LETRAS.get("EXISTS").contains(a) && !LETRAS.get("GOOD").contains(a)){
                 j.setText(a.toString()); 
                 j.setForeground(AMARILLO_LETRAS);
-                LETRAS.get("EXISTSTOTAL").add(a);
+                if (!LETRAS.get("GOODTOTAL").contains(a)) {
+                    LETRAS.get("EXISTSTOTAL").add(a);
+                }
             }
             else{
                 j.setText(a.toString()); 
@@ -179,7 +184,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.messagesJPanel.setBackground(FONDO_BOTTOM_OSCURO);
             this.wordJTextField.setBackground(FONDO_MENU_TEXTFIELD_OSCURO);
             this.wordJTextField.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO);
+            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
         }
@@ -191,12 +196,13 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.inputJPanel.setBackground(FONDO_BOTTOM_CLARO);
             this.messagesJPanel.setBackground(FONDO_BOTTOM_CLARO);
             this.wordJTextField.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.wordJTextField.setForeground(COLOR_LETRAS_CLARO);
+            this.wordJTextField.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
             this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendJButton.setForeground(COLOR_LETRAS_CLARO);
-            this.messagesJLabel.setForeground(COLOR_LETRAS_CLARO);
+            this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -493,7 +499,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
         leftBottomJPanel.setLayout(new java.awt.GridLayout(3, 1));
 
         goodLettersJPanel.setBackground(new java.awt.Color(204, 204, 255));
-        goodLettersJPanel.setLayout(new java.awt.GridLayout(1, 0));
+        goodLettersJPanel.setLayout(new java.awt.GridLayout());
 
         goodLettersJLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         goodLettersJLabel.setForeground(new java.awt.Color(102, 255, 51));
@@ -568,9 +574,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
 
         mainJPanel.add(bottomJPanel, java.awt.BorderLayout.PAGE_END);
 
-        mainJMenuBar.setBackground(new java.awt.Color(51, 51, 51));
-
-        juegoJMenu.setBackground(new java.awt.Color(51, 51, 51));
         juegoJMenu.setText("Juego");
 
         nuevaPartidaJMenuItem.setText("Nueva partida");
@@ -591,7 +594,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
 
         mainJMenuBar.add(juegoJMenu);
 
-        ajustesJMenu.setBackground(new java.awt.Color(51, 51, 51));
         ajustesJMenu.setText("Ajustes");
         ajustesJMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -668,7 +670,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.tema = ajustes.getTema();
             seleccionarTema();
         }
-        if(this.motor != ajustes.getMotor()){
+        if(!this.motor.getClass().getSimpleName().equals(ajustes.getMotor().getClass().getSimpleName()) || !this.motor.getIdioma().equals(ajustes.getMotor().getIdioma())){
             this.motor = ajustes.getMotor();
             try{
                 reiniciarMotor();

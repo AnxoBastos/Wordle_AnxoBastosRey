@@ -188,7 +188,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         elegirIdiomaJPanel.setMinimumSize(new java.awt.Dimension(400, 50));
         elegirIdiomaJPanel.setPreferredSize(new java.awt.Dimension(400, 50));
-        elegirIdiomaJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        elegirIdiomaJPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 4));
 
         textoIdiomaJLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         textoIdiomaJLabel.setText("Elegir un idioma:");
@@ -382,7 +382,9 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    //*****************************EVENTOS*****************************//
+    
     private void eliminarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarJButtonActionPerformed
         try {
             if(this.eliminarJTextField.getText().matches("[a-zA-Z]{5}")) {

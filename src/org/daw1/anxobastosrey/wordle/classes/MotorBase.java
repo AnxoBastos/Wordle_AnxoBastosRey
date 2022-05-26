@@ -126,8 +126,6 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
                     }
                 }
             }
-            sb.delete(sb.length() - 2, sb.length());
-            sb.append(".");
             return sb.toString();
         }
     }

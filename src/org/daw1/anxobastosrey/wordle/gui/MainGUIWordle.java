@@ -130,7 +130,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
                 }
                 else{
                     j.setText(a.toString());
-                    j.setForeground(AMARILLO_LETRAS);
+                    j.setForeground(NEGRO_LETRAS);
                     if (!LETRAS.get("GOODTOTAL").contains(a)) {
                     LETRAS.get("EXISTSTOTAL").add(a);
                     }

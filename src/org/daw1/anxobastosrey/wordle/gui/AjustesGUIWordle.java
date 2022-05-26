@@ -133,7 +133,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
         estadoEliminarJPanel = new javax.swing.JPanel();
         estadoEliminarJLabel = new javax.swing.JLabel();
         mostrarPalabrasJPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        mostraPalabrasJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DAW1 Ajustes Wordle AnxoBastosRey");
@@ -354,9 +354,14 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
         mostrarPalabrasJPanel.setPreferredSize(new java.awt.Dimension(400, 40));
 
-        jButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jButton1.setText("Mostrar palabras");
-        mostrarPalabrasJPanel.add(jButton1);
+        mostraPalabrasJButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        mostraPalabrasJButton.setText("Mostrar palabras");
+        mostraPalabrasJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mostraPalabrasJButtonActionPerformed(evt);
+            }
+        });
+        mostrarPalabrasJPanel.add(mostraPalabrasJButton);
 
         mainJPanel.add(mostrarPalabrasJPanel);
 
@@ -380,7 +385,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
     private void eliminarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarJButtonActionPerformed
         try {
-            if(this.eliminarJTextField.getText().length() == 5) {
+            if(this.eliminarJTextField.getText().matches("[a-zA-Z]{5}")) {
                 if(this.motor.borrarPalabra(this.eliminarJTextField.getText())){
                     this.eliminarJTextField.setText("");
                     this.estadoEliminarJLabel.setText("La palabra se ha borrado con exito");
@@ -419,7 +424,7 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
 
     private void insertarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarJButtonActionPerformed
         try {
-            if(this.insertarJTextField.getText().length() == 5) {
+            if(this.insertarJTextField.getText().matches("[a-zA-Z]{5}")) {
                 if(this.motor.añadirPalabra(this.insertarJTextField.getText())){
                     this.insertarJTextField.setText("");
                     this.estadoInsertarJLabel.setText("La palabra se ha insertado con exito");
@@ -508,6 +513,10 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
         this.tema = false;
     }//GEN-LAST:event_temaClaroJRadioButtonActionPerformed
 
+    private void mostraPalabrasJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostraPalabrasJButtonActionPerformed
+        
+    }//GEN-LAST:event_mostraPalabrasJButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -575,8 +584,8 @@ public class AjustesGUIWordle extends javax.swing.JDialog {
     private javax.swing.JPanel insertarJPanel;
     private javax.swing.JTextField insertarJTextField;
     private javax.swing.JRadioButton italianoJRadioButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel mainJPanel;
+    private javax.swing.JButton mostraPalabrasJButton;
     private javax.swing.JPanel mostrarPalabrasJPanel;
     private javax.swing.JRadioButton motorArchivoJRadioButton;
     private javax.swing.JRadioButton motorBaseJRadioButton;

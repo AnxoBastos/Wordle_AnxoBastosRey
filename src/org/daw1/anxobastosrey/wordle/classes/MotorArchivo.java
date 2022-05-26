@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import org.daw1.anxobastosrey.wordle.enu.Idioma;
+import org.daw1.anxobastosrey.wordle.gui.MainGUIWordle;
 import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
 
 /**
@@ -27,6 +28,8 @@ import org.daw1.anxobastosrey.wordle.interfaces.IMotorIdioma;
  */
 public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
 
+    private static final File CARPETA = new File(Paths.get(".") + File.separator + "data");
+    
     private final File fichero;
     private final Idioma idioma;
     private final Set<String> palabras = new HashSet<>();;
@@ -54,6 +57,10 @@ public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
         cargarPalabras();
     }
     
+    @Override
+    public Idioma getIdioma() {
+        return idioma;
+    }
     
     @Override
     public boolean existePalabra(String s){
@@ -64,14 +71,6 @@ public class MotorArchivo implements IMotorIdioma, java.io.Serializable{
         else{
             return false;
         }
-    }
-
-    //tema color main
-    
-    
-    @Override
-    public Idioma getIdioma() {
-        return idioma;
     }
 
     @Override

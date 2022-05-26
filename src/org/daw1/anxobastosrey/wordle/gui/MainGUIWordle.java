@@ -42,19 +42,22 @@ public class MainGUIWordle extends javax.swing.JFrame{
     private static final java.awt.Color VERDE_LETRAS = new java.awt.Color(102,255,51);
     private static final java.awt.Color AMARILLO_LETRAS = new java.awt.Color(255,204,51);
     private static final java.awt.Color ROJO_LETRAS = new java.awt.Color(255,51,51);
+    private static final java.awt.Color NEGRO_LETRAS = new java.awt.Color(0,0,0);
+    private static final java.awt.Color BASE_LETRAS = new java.awt.Color(204,204,204);
     
     protected static final java.awt.Color FONDO_LETRAS_OSCURO = new java.awt.Color(153,153,153);
     protected static final java.awt.Color FONDO_BOTTOM_OSCURO = new java.awt.Color(102,102,102);
     protected static final java.awt.Color FONDO_MENU_TEXTFIELD_OSCURO = new java.awt.Color(51,51,51);
+    protected static final java.awt.Color FONDO_BUTTOM_OSCURO = new java.awt.Color(0,0,0);
     
-    protected static final java.awt.Color FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO = new java.awt.Color(0,0,0);
+    protected static final java.awt.Color COLOR_LETRAS_CLARO = new java.awt.Color(51,51,51);
     protected static final java.awt.Color COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO = new java.awt.Color(255,255,255);
     protected static final java.awt.Color FONDO_BOTTOM_CLARO = new java.awt.Color(204,204,255);
     
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
     
-    public static final File CARPETA = new File(Paths.get(".") + File.separator + "data");
+    private static final File CARPETA = new File(Paths.get(".") + File.separator + "data");
     private static final File GUARDADO = new File(Paths.get(".") + File.separator + "data" + File.separator + "guardado.dat");
     
     private static final javax.swing.JLabel[][] LABELS = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
@@ -63,8 +66,8 @@ public class MainGUIWordle extends javax.swing.JFrame{
     //*****************************VARIABLES*****************************//
     
     private String palabraDelDia;
-    private IMotorIdioma motor = new MotorArchivo(Idioma.ES);
     private int intentos = 0;
+    private IMotorIdioma motor = new MotorArchivo(Idioma.ES);
     private Boolean tema = false;
     
     //*****************************CONSTRUCTOR*****************************//
@@ -74,24 +77,20 @@ public class MainGUIWordle extends javax.swing.JFrame{
      */
     public MainGUIWordle() throws SQLException, IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
-        if (cargarMotor() != null) {
+        if (GUARDADO.exists()) {
             PairMotorTema c = cargarMotor();
-            this.motor = (IMotorIdioma)c.getMotor();
-            this.tema = (Boolean)c.getTema();
+            this.motor = c.getMotor();
+            this.tema = c.getTema();
         }
-        seleccionarTema();
-        this.palabraDelDia = motor.generarPalabra();
-        
         LETRAS.put("GOOD", new TreeSet<>());
-        LETRAS.put("EXISTS", new TreeSet<>()); 
-        
+        LETRAS.put("EXISTS", new TreeSet<>());
         LETRAS.put("GOODTOTAL", new TreeSet<>());
         LETRAS.put("EXISTSTOTAL", new TreeSet<>());
         LETRAS.put("WRONGTOTAL", new TreeSet<>());
-        
+        this.palabraDelDia = motor.generarPalabra();
+        seleccionarTema();
         rellenarMatrizLabels();
-        
-        System.out.println(palabraDelDia);
+        System.out.println(this.palabraDelDia);
     }
     
     //*****************************JUEGO*****************************//
@@ -119,27 +118,37 @@ public class MainGUIWordle extends javax.swing.JFrame{
             if (LETRAS.get("GOOD").contains(a) && !LETRAS.get("EXISTS").contains(a)){
                 j.setText(a.toString()); 
                 j.setForeground(VERDE_LETRAS);
+                LETRAS.get("GOODTOTAL").add(a);
+                LETRAS.get("EXISTSTOTAL").remove(a);
             }
             else if(LETRAS.get("GOOD").contains(a) && LETRAS.get("EXISTS").contains(a)){
                 if (palabraDelDia.charAt(i) == a) {
                     j.setText(a.toString()); 
                     j.setForeground(VERDE_LETRAS);
+                    LETRAS.get("GOODTOTAL").add(a);
+                    LETRAS.get("EXISTSTOTAL").remove(a);
                 }
                 else{
                     j.setText(a.toString());
+                    j.setForeground(NEGRO_LETRAS);
                 }
             }
             else if(LETRAS.get("EXISTS").contains(a) && !LETRAS.get("GOOD").contains(a)){
                 j.setText(a.toString()); 
                 j.setForeground(AMARILLO_LETRAS);
+                LETRAS.get("EXISTSTOTAL").add(a);
             }
             else{
                 j.setText(a.toString()); 
                 j.setForeground(ROJO_LETRAS);
+                LETRAS.get("WRONGTOTAL").add(a);
             }            
         }
         LETRAS.get("GOOD").clear();
         LETRAS.get("EXISTS").clear();
+        this.goodLettersJLabel.setText(LETRAS.get("GOODTOTAL").toString());
+        this.existsLettersJLabel.setText(LETRAS.get("EXISTSTOTAL").toString());
+        this.wrongLettersJLabel.setText(LETRAS.get("WRONGTOTAL").toString());
     }
     
     public void comprobarLetras(String actual){
@@ -149,22 +158,16 @@ public class MainGUIWordle extends javax.swing.JFrame{
                 if(this.palabraDelDia.contains(ch.toString())){
                     if(this.palabraDelDia.charAt(i) == actual.charAt(i)){
                         this.LETRAS.get("GOOD").add(actual.charAt(i));
-                        //letras.get("GOODTOTAL").add(actual.get(i));
-                        //letras.get("EXISTSTOTAL").remove(actual.get(i));
                     }
                     else{
                         this.LETRAS.get("EXISTS").add(actual.charAt(j));
-                        //letras.get("EXISTSTOTAL").add(actual.get(j));
                     }
-                }
-                else{
-                    //letras.get("WRONGTOTAL").add(actual.get(j));
-                }
+                }    
             }
         }
     }
 
-    //*****************************TEMAS*****************************//
+    //*****************************SELECTORES*****************************//
     
     private void seleccionarTema(){
         if(this.tema == true){
@@ -176,7 +179,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.messagesJPanel.setBackground(FONDO_BOTTOM_OSCURO);
             this.wordJTextField.setBackground(FONDO_MENU_TEXTFIELD_OSCURO);
             this.wordJTextField.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendJButton.setBackground(FONDO_BUTTOM_OSCURO);
             this.sendJButton.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
             this.messagesJLabel.setForeground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
         }
@@ -188,10 +191,10 @@ public class MainGUIWordle extends javax.swing.JFrame{
             this.inputJPanel.setBackground(FONDO_BOTTOM_CLARO);
             this.messagesJPanel.setBackground(FONDO_BOTTOM_CLARO);
             this.wordJTextField.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.wordJTextField.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.wordJTextField.setForeground(COLOR_LETRAS_CLARO);
             this.sendJButton.setBackground(COLOR_LETRAS_OSCURO_FONDO_LETRAS_TEXTFIELD_BUTTOM_CLARO);
-            this.sendJButton.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
-            this.messagesJLabel.setForeground(FONDO_BUTTOM_OSCURO_COLOR_LETRAS_CLARO);
+            this.sendJButton.setForeground(COLOR_LETRAS_CLARO);
+            this.messagesJLabel.setForeground(COLOR_LETRAS_CLARO);
         }
     }
     /**
@@ -267,7 +270,6 @@ public class MainGUIWordle extends javax.swing.JFrame{
         mainJPanel.setLayout(new java.awt.BorderLayout());
 
         lettersJPanel.setBackground(new java.awt.Color(255, 255, 255));
-        lettersJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         lettersJPanel.setForeground(new java.awt.Color(204, 204, 255));
         lettersJPanel.setLayout(new java.awt.GridLayout(6, 5));
 
@@ -483,7 +485,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
 
         mainJPanel.add(lettersJPanel, java.awt.BorderLayout.CENTER);
 
-        bottomJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        bottomJPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         bottomJPanel.setForeground(new java.awt.Color(0, 0, 0));
         bottomJPanel.setPreferredSize(new java.awt.Dimension(200, 100));
         bottomJPanel.setLayout(new java.awt.GridLayout(1, 2));
@@ -499,6 +501,11 @@ public class MainGUIWordle extends javax.swing.JFrame{
         goodLettersJLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         goodLettersJLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         goodLettersJLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        goodLettersJLabel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                goodLettersJLabelKeyPressed(evt);
+            }
+        });
         goodLettersJPanel.add(goodLettersJLabel);
 
         leftBottomJPanel.add(goodLettersJPanel);
@@ -614,6 +621,8 @@ public class MainGUIWordle extends javax.swing.JFrame{
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    //*****************************EVENTOS*****************************//
+    
     private void ajustesJMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajustesJMenuActionPerformed
     }//GEN-LAST:event_ajustesJMenuActionPerformed
 
@@ -628,12 +637,16 @@ public class MainGUIWordle extends javax.swing.JFrame{
                         this.intentos++;
                         if (this.palabraDelDia.equals(palabra)){
                             this.messagesJLabel.setText("VICTORIA");
-                            this.mainJPanel.setEnabled(false);
+                            this.sendJButton.setEnabled(false);
                         }
-                        this.goodLettersJLabel.setText(LETRAS.get("GOODTOTAL").toString());
-                        this.existsLettersJLabel.setText(LETRAS.get("EXISTSTOTAL").toString());
-                        this.wrongLettersJLabel.setText(LETRAS.get("WRONGTOTAL").toString());
-                        this.messagesJLabel.setText("Inserte una palabra de 5 letras");
+                        else if(this.intentos != MAX_INTENTOS){
+                            this.wordJTextField.setText("");
+                            this.messagesJLabel.setText("Inserte una palabra de 5 letras");
+                        }
+                        else{
+                            this.messagesJLabel.setText("GAME OVER");
+                            this.sendJButton.setEnabled(false);
+                        }
                     }
                     else{
                         this.messagesJLabel.setText("ERROR: La palabra insertada no existe");
@@ -645,15 +658,13 @@ public class MainGUIWordle extends javax.swing.JFrame{
             else{
                 this.messagesJLabel.setText("ERROR: Debe insertar una palabra de 5 letras");
             }
-        }else{
-            this.messagesJLabel.setText("GAME OVER");
-        }
+        }    
     }//GEN-LAST:event_sendJButtonActionPerformed
 
     private void ajustesJMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ajustesJMenuMouseClicked
         AjustesGUIWordle ajustes = new AjustesGUIWordle(this, true, this.motor, this.tema);
         ajustes.setVisible(true);
-        if(this.tema != ajustes.getTema()){
+        if(!this.tema.equals(ajustes.getTema())){
             this.tema = ajustes.getTema();
             seleccionarTema();
         }
@@ -662,10 +673,7 @@ public class MainGUIWordle extends javax.swing.JFrame{
             try{
                 reiniciarMotor();
             }
-            catch(SQLException ex){
-                showMessageDialog(ex);
-            } 
-            catch(IOException ex){
+            catch(SQLException | IOException ex){
                 showMessageDialog(ex);
             }
         }
@@ -676,13 +684,10 @@ public class MainGUIWordle extends javax.swing.JFrame{
         try{
             reiniciarMotor();
         }
-        catch(SQLException ex){
+        catch(SQLException | IOException ex){
             showMessageDialog(ex);
         }
-        catch(IOException ex){
-            showMessageDialog(ex);
-        }
-        System.out.println(this.palabraDelDia);
+        this.sendJButton.setEnabled(true);
     }//GEN-LAST:event_nuevaPartidaJMenuItemActionPerformed
 
     private void salirJuegoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirJuegoMenuItemActionPerformed
@@ -702,6 +707,10 @@ public class MainGUIWordle extends javax.swing.JFrame{
             Logger.getLogger(MainGUIWordle.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void goodLettersJLabelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_goodLettersJLabelKeyPressed
+
+    }//GEN-LAST:event_goodLettersJLabelKeyPressed
 
       
     /**
@@ -750,10 +759,32 @@ public class MainGUIWordle extends javax.swing.JFrame{
     public void showMessageDialog(Exception ex){
         JOptionPane.showMessageDialog(this, "Excepcion en app: " + ex.getMessage());
     }
+    
+    //*****************************MOTOR*****************************//
 
     private void reiniciarMotor() throws SQLException, IOException{
+        for (int i = 1; i <= MAX_INTENTOS; i++) {
+            for (int j = 1; j <= TAMANHO_PALABRA; j++) {
+                try {
+                    String nombreLabel = "jLabel" + i + "x" + j;
+                    javax.swing.JLabel aux;
+                    aux = (javax.swing.JLabel) this.getClass().getDeclaredField(nombreLabel).get(this);
+                    aux.setText("?");
+                    aux.setForeground(BASE_LETRAS);
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                    showMessageDialog(ex);
+                }
+            }
+        }    
+        this.intentos = 0;
         this.palabraDelDia = this.motor.generarPalabra();
-        seleccionarTema();
+        LETRAS.get("GOODTOTAL").clear();
+        LETRAS.get("EXISTSTOTAL").clear();
+        LETRAS.get("WRONGTOTAL").clear();
+        this.goodLettersJLabel.setText("");
+        this.existsLettersJLabel.setText("");
+        this.wrongLettersJLabel.setText("");
+        System.out.println(this.palabraDelDia);
     }
     
     private PairMotorTema cargarMotor() throws FileNotFoundException, IOException, ClassNotFoundException{
@@ -770,18 +801,18 @@ public class MainGUIWordle extends javax.swing.JFrame{
     }
     
     private void guardarMotor() throws FileNotFoundException, IOException{
-        if(GUARDADO.exists() && GUARDADO.canWrite()) {
+        if (!GUARDADO.exists()) {
+            if (!CARPETA.exists()) {
+                CARPETA.mkdir();
+            }
+            GUARDADO.createNewFile();
             try (OutputStream out = new FileOutputStream(GUARDADO);
                 ObjectOutputStream outObj = new ObjectOutputStream(new BufferedOutputStream(out))){                    
                 PairMotorTema g = new PairMotorTema(this.motor, this.tema);
                 outObj.writeObject(g);
             }
         }
-        if (!GUARDADO.exists()) {
-            if (!CARPETA.exists()) {
-                CARPETA.mkdir();
-            }
-            GUARDADO.createNewFile();
+        if (GUARDADO.exists() && GUARDADO.canWrite()) {
             try (OutputStream out = new FileOutputStream(GUARDADO);
                 ObjectOutputStream outObj = new ObjectOutputStream(new BufferedOutputStream(out))){                    
                 PairMotorTema g = new PairMotorTema(this.motor, this.tema);

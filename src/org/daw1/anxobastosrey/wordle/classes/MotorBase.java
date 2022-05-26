@@ -36,7 +36,7 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
     public boolean existePalabra(String s) throws SQLException{
         s = s.toUpperCase();
         try(Connection conn = DriverManager.getConnection(URL);
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS TOTAL WHERE lang = ? AND palabra = ?")){
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS TOTAL FROM palabras WHERE lang = ? AND palabra = ?")){
             ps.setString(1, this.idioma.toString());
             ps.setString(2, s);
             try(ResultSet rs = ps.executeQuery()){
@@ -54,7 +54,7 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
     @Override
     public boolean añadirPalabra(String s) throws SQLException {
         s = s.toUpperCase();
-        if(existePalabra(s)){
+        if(!existePalabra(s)){
             try(Connection conn = DriverManager.getConnection(URL);
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra, lang) VALUES (?,?)")){
                 ps.setString(1, s.toUpperCase());
@@ -71,7 +71,7 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
     @Override
     public boolean borrarPalabra(String s) throws SQLException {
         s = s.toUpperCase();
-        if (!existePalabra(s)) {
+        if (existePalabra(s)) {
             try(Connection conn = DriverManager.getConnection(URL);
                 PreparedStatement ps = conn.prepareStatement("DELETE FROM palabras WHERE (palabra = ? AND lang = ?)")){
                 ps.setString(1, s);
@@ -101,7 +101,7 @@ public class MotorBase implements IMotorIdioma, java.io.Serializable{
     
     private int tamanhoBase() throws SQLException{
         try(Connection conn = DriverManager.getConnection(this.URL);
-            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS TOTAL WHERE lang = ?")){
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS TOTAL FROM palabras WHERE lang = ?")){
             ps.setString(1, this.idioma.toString());
             try(ResultSet rs = ps.executeQuery()){
                 return rs.getInt("TOTAL");
